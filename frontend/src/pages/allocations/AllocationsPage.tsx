@@ -11,17 +11,32 @@ import {
 import { assetsApi, type Asset } from '../../api/assets';
 import { employeesApi, type OrgEmployee } from '../../api/org';
 import { ApiError } from '../../api/client';
-import { Badge, Button, Input, Select, Spinner, Table, PageHeader, Modal } from '../../components/ui';
+import {
+  Badge,
+  Button,
+  Input,
+  Select,
+  Spinner,
+  Table,
+  PageHeader,
+  Modal,
+} from '../../components/ui';
 import { useToast } from '../../hooks/useToast';
 import { useAuth } from '../../context/AuthContext';
 
-const ALLOC_STATUS_BADGE: Record<AllocationStatus, 'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'> = {
+const ALLOC_STATUS_BADGE: Record<
+  AllocationStatus,
+  'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'
+> = {
   active: 'primary',
   returned: 'success',
   overdue: 'danger',
 };
 
-const TRANSFER_STATUS_BADGE: Record<TransferStatus, 'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'> = {
+const TRANSFER_STATUS_BADGE: Record<
+  TransferStatus,
+  'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'
+> = {
   requested: 'warning',
   approved: 'info',
   rejected: 'danger',
@@ -69,7 +84,10 @@ export function AllocationsPage() {
 
   // ── Transfer Modal ─────────────────────────────────────────
   const [showTransferModal, setShowTransferModal] = useState(false);
-  const [transferForm, setTransferForm] = useState({ asset_id: '', to_employee_id: '' });
+  const [transferForm, setTransferForm] = useState({
+    asset_id: '',
+    to_employee_id: '',
+  });
   const [transferSaving, setTransferSaving] = useState(false);
   const [allocatedAssets, setAllocatedAssets] = useState<Asset[]>([]);
 
@@ -121,7 +139,11 @@ export function AllocationsPage() {
       ]);
       setAvailableAssets(assetRes.assets);
       setEmployees(empRes.employees);
-      setAllocForm({ asset_id: '', holder_employee_id: '', expected_return_date: '' });
+      setAllocForm({
+        asset_id: '',
+        holder_employee_id: '',
+        expected_return_date: '',
+      });
       setShowAllocModal(true);
     } catch {
       toast.error('Failed to load assets or employees.');
@@ -161,7 +183,10 @@ export function AllocationsPage() {
       setShowAllocModal(false);
       loadAllocations();
     } catch (err) {
-      toast.error('Allocation failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Allocation failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setAllocSaving(false);
     }
@@ -180,7 +205,10 @@ export function AllocationsPage() {
       setReturnNotes('');
       loadAllocations();
     } catch (err) {
-      toast.error('Return failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Return failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setReturnSaving(false);
     }
@@ -201,20 +229,29 @@ export function AllocationsPage() {
       setShowTransferModal(false);
       loadTransfers();
     } catch (err) {
-      toast.error('Transfer failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Transfer failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setTransferSaving(false);
     }
   };
 
-  const handleTransferAction = async (id: number, action: 'approve' | 'reject') => {
+  const handleTransferAction = async (
+    id: number,
+    action: 'approve' | 'reject',
+  ) => {
     try {
       await transfersApi.process(id, action);
       toast.success(`Transfer ${action}d.`);
       loadTransfers();
       loadAllocations();
     } catch (err) {
-      toast.error(`Failed to ${action} transfer.`, err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        `Failed to ${action} transfer.`,
+        err instanceof ApiError ? err.message : undefined,
+      );
     }
   };
 
@@ -225,7 +262,8 @@ export function AllocationsPage() {
     fontSize: 'var(--text-sm)',
     fontWeight: tab === t ? 'var(--fw-semibold)' : 'var(--fw-normal)',
     color: tab === t ? 'var(--primary)' : 'var(--text-muted)',
-    borderBottom: tab === t ? '2px solid var(--primary)' : '2px solid transparent',
+    borderBottom:
+      tab === t ? '2px solid var(--primary)' : '2px solid transparent',
     cursor: 'pointer',
     background: 'none',
     border: 'none',
@@ -256,23 +294,43 @@ export function AllocationsPage() {
       />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 'var(--sp-1)', borderBottom: '1px solid var(--border)', marginBottom: 'var(--sp-5)' }}>
-        <button style={tabStyle('allocations')} onClick={() => setTab('allocations')}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 'var(--sp-1)',
+          borderBottom: '1px solid var(--border)',
+          marginBottom: 'var(--sp-5)',
+        }}
+      >
+        <button
+          style={tabStyle('allocations')}
+          onClick={() => setTab('allocations')}
+        >
           Allocations
         </button>
-        <button style={tabStyle('transfers')} onClick={() => setTab('transfers')}>
+        <button
+          style={tabStyle('transfers')}
+          onClick={() => setTab('transfers')}
+        >
           Transfer Requests
         </button>
       </div>
 
       {tab === 'allocations' && (
         <>
-          <div style={{ display: 'flex', gap: 'var(--sp-3)', marginBottom: 'var(--sp-4)', maxWidth: '250px' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--sp-3)',
+              marginBottom: 'var(--sp-4)',
+              maxWidth: '250px',
+            }}
+          >
             <Select
               id="alloc-status-filter"
               label="Filter by Status"
               value={allocFilter}
-              onChange={e => setAllocFilter(e.target.value)}
+              onChange={(e) => setAllocFilter(e.target.value)}
               options={[
                 { value: '', label: 'All' },
                 { value: 'active', label: 'Active' },
@@ -282,19 +340,31 @@ export function AllocationsPage() {
             />
           </div>
 
-          <div style={{ marginBottom: 'var(--sp-3)', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-            {allocLoading ? <Spinner size="xs" label="Loading" /> : `${allocations.length} record${allocations.length !== 1 ? 's' : ''}`}
+          <div
+            style={{
+              marginBottom: 'var(--sp-3)',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--text-muted)',
+            }}
+          >
+            {allocLoading ? (
+              <Spinner size="xs" label="Loading" />
+            ) : (
+              `${allocations.length} record${allocations.length !== 1 ? 's' : ''}`
+            )}
           </div>
 
           <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
             <Table
               loading={allocLoading}
-              keyExtractor={a => String(a.id)}
+              keyExtractor={(a) => String(a.id)}
               data={allocations}
               empty="No allocations found."
               columns={[
                 {
-                  key: 'asset', header: 'Asset', render: a => (
+                  key: 'asset',
+                  header: 'Asset',
+                  render: (a) => (
                     <div>
                       <strong
                         style={{ color: 'var(--primary)', cursor: 'pointer' }}
@@ -302,46 +372,78 @@ export function AllocationsPage() {
                       >
                         {a.asset_tag}
                       </strong>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>{a.asset_name}</div>
+                      <div
+                        style={{
+                          fontSize: 'var(--text-xs)',
+                          color: 'var(--text-muted)',
+                        }}
+                      >
+                        {a.asset_name}
+                      </div>
                     </div>
                   ),
                 },
                 {
-                  key: 'holder', header: 'Holder', render: a => (
-                    <span>{a.holder_employee_name || a.holder_department_name || '—'}</span>
+                  key: 'holder',
+                  header: 'Holder',
+                  render: (a) => (
+                    <span>
+                      {a.holder_employee_name ||
+                        a.holder_department_name ||
+                        '—'}
+                    </span>
                   ),
                 },
                 {
-                  key: 'status', header: 'Status',
-                  render: a => <Badge variant={ALLOC_STATUS_BADGE[a.status]}>{a.status}</Badge>,
+                  key: 'status',
+                  header: 'Status',
+                  render: (a) => (
+                    <Badge variant={ALLOC_STATUS_BADGE[a.status]}>
+                      {a.status}
+                    </Badge>
+                  ),
                 },
                 {
-                  key: 'expected', header: 'Expected Return',
-                  render: a => <span style={{ fontSize: 'var(--text-sm)' }}>{a.expected_return_date || '—'}</span>,
+                  key: 'expected',
+                  header: 'Expected Return',
+                  render: (a) => (
+                    <span style={{ fontSize: 'var(--text-sm)' }}>
+                      {a.expected_return_date || '—'}
+                    </span>
+                  ),
                 },
                 {
-                  key: 'allocated', header: 'Allocated On',
-                  render: a => <span style={{ fontSize: 'var(--text-sm)' }}>{new Date(a.created_at).toLocaleDateString()}</span>,
+                  key: 'allocated',
+                  header: 'Allocated On',
+                  render: (a) => (
+                    <span style={{ fontSize: 'var(--text-sm)' }}>
+                      {new Date(a.created_at).toLocaleDateString()}
+                    </span>
+                  ),
                 },
-                ...(canManage ? [{
-                  key: 'actions',
-                  header: '',
-                  width: '100px',
-                  render: (a: Allocation) =>
-                    (a.status === 'active' || a.status === 'overdue') ? (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setReturnAlloc(a);
-                          setReturnNotes('');
-                          setShowReturnModal(true);
-                        }}
-                      >
-                        Return
-                      </Button>
-                    ) : null,
-                }] : []),
+                ...(canManage
+                  ? [
+                      {
+                        key: 'actions',
+                        header: '',
+                        width: '100px',
+                        render: (a: Allocation) =>
+                          a.status === 'active' || a.status === 'overdue' ? (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setReturnAlloc(a);
+                                setReturnNotes('');
+                                setShowReturnModal(true);
+                              }}
+                            >
+                              Return
+                            </Button>
+                          ) : null,
+                      },
+                    ]
+                  : []),
               ]}
             />
           </div>
@@ -350,12 +452,19 @@ export function AllocationsPage() {
 
       {tab === 'transfers' && (
         <>
-          <div style={{ display: 'flex', gap: 'var(--sp-3)', marginBottom: 'var(--sp-4)', maxWidth: '250px' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--sp-3)',
+              marginBottom: 'var(--sp-4)',
+              maxWidth: '250px',
+            }}
+          >
             <Select
               id="transfer-status-filter"
               label="Filter by Status"
               value={transferFilter}
-              onChange={e => setTransferFilter(e.target.value)}
+              onChange={(e) => setTransferFilter(e.target.value)}
               options={[
                 { value: '', label: 'All' },
                 { value: 'requested', label: 'Requested' },
@@ -366,19 +475,31 @@ export function AllocationsPage() {
             />
           </div>
 
-          <div style={{ marginBottom: 'var(--sp-3)', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-            {transferLoading ? <Spinner size="xs" label="Loading" /> : `${transfers.length} request${transfers.length !== 1 ? 's' : ''}`}
+          <div
+            style={{
+              marginBottom: 'var(--sp-3)',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--text-muted)',
+            }}
+          >
+            {transferLoading ? (
+              <Spinner size="xs" label="Loading" />
+            ) : (
+              `${transfers.length} request${transfers.length !== 1 ? 's' : ''}`
+            )}
           </div>
 
           <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
             <Table
               loading={transferLoading}
-              keyExtractor={t => String(t.id)}
+              keyExtractor={(t) => String(t.id)}
               data={transfers}
               empty="No transfer requests."
               columns={[
                 {
-                  key: 'asset', header: 'Asset', render: t => (
+                  key: 'asset',
+                  header: 'Asset',
+                  render: (t) => (
                     <div>
                       <strong
                         style={{ color: 'var(--primary)', cursor: 'pointer' }}
@@ -386,42 +507,79 @@ export function AllocationsPage() {
                       >
                         {t.asset_tag}
                       </strong>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>{t.asset_name}</div>
+                      <div
+                        style={{
+                          fontSize: 'var(--text-xs)',
+                          color: 'var(--text-muted)',
+                        }}
+                      >
+                        {t.asset_name}
+                      </div>
                     </div>
                   ),
                 },
                 {
-                  key: 'from', header: 'From',
-                  render: t => <span>{t.from_employee_name || '—'}</span>,
+                  key: 'from',
+                  header: 'From',
+                  render: (t) => <span>{t.from_employee_name || '—'}</span>,
                 },
                 {
-                  key: 'to', header: 'To',
-                  render: t => <span>{t.to_employee_name || '—'}</span>,
+                  key: 'to',
+                  header: 'To',
+                  render: (t) => <span>{t.to_employee_name || '—'}</span>,
                 },
                 {
-                  key: 'status', header: 'Status',
-                  render: t => <Badge variant={TRANSFER_STATUS_BADGE[t.status]}>{t.status}</Badge>,
+                  key: 'status',
+                  header: 'Status',
+                  render: (t) => (
+                    <Badge variant={TRANSFER_STATUS_BADGE[t.status]}>
+                      {t.status}
+                    </Badge>
+                  ),
                 },
                 {
-                  key: 'requested', header: 'Requested',
-                  render: t => <span style={{ fontSize: 'var(--text-sm)' }}>{new Date(t.created_at).toLocaleDateString()}</span>,
+                  key: 'requested',
+                  header: 'Requested',
+                  render: (t) => (
+                    <span style={{ fontSize: 'var(--text-sm)' }}>
+                      {new Date(t.created_at).toLocaleDateString()}
+                    </span>
+                  ),
                 },
-                ...(canApprove ? [{
-                  key: 'actions',
-                  header: '',
-                  width: '160px',
-                  render: (t: TransferRequest) =>
-                    t.status === 'requested' ? (
-                      <div style={{ display: 'flex', gap: 'var(--sp-2)' }}>
-                        <Button variant="primary" size="sm" onClick={() => handleTransferAction(t.id, 'approve')}>
-                          Approve
-                        </Button>
-                        <Button variant="danger" size="sm" onClick={() => handleTransferAction(t.id, 'reject')}>
-                          Reject
-                        </Button>
-                      </div>
-                    ) : null,
-                }] : []),
+                ...(canApprove
+                  ? [
+                      {
+                        key: 'actions',
+                        header: '',
+                        width: '160px',
+                        render: (t: TransferRequest) =>
+                          t.status === 'requested' ? (
+                            <div
+                              style={{ display: 'flex', gap: 'var(--sp-2)' }}
+                            >
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() =>
+                                  handleTransferAction(t.id, 'approve')
+                                }
+                              >
+                                Approve
+                              </Button>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() =>
+                                  handleTransferAction(t.id, 'reject')
+                                }
+                              >
+                                Reject
+                              </Button>
+                            </div>
+                          ) : null,
+                      },
+                    ]
+                  : []),
               ]}
             />
           </div>
@@ -435,21 +593,43 @@ export function AllocationsPage() {
         title="Allocate Asset"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setShowAllocModal(false)}>Cancel</Button>
-            <Button variant="primary" loading={allocSaving} onClick={handleAllocate}>Allocate</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setShowAllocModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              loading={allocSaving}
+              onClick={handleAllocate}
+            >
+              Allocate
+            </Button>
           </>
         }
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--sp-4)',
+          }}
+        >
           <Select
             id="alloc-asset"
             label="Asset"
             required
             value={allocForm.asset_id}
-            onChange={e => setAllocForm({ ...allocForm, asset_id: e.target.value })}
+            onChange={(e) =>
+              setAllocForm({ ...allocForm, asset_id: e.target.value })
+            }
             options={[
               { value: '', label: 'Select an asset...' },
-              ...availableAssets.map(a => ({ value: String(a.id), label: `${a.asset_tag} — ${a.name}` })),
+              ...availableAssets.map((a) => ({
+                value: String(a.id),
+                label: `${a.asset_tag} — ${a.name}`,
+              })),
             ]}
           />
           <Select
@@ -457,10 +637,15 @@ export function AllocationsPage() {
             label="Assign to Employee"
             required
             value={allocForm.holder_employee_id}
-            onChange={e => setAllocForm({ ...allocForm, holder_employee_id: e.target.value })}
+            onChange={(e) =>
+              setAllocForm({ ...allocForm, holder_employee_id: e.target.value })
+            }
             options={[
               { value: '', label: 'Select an employee...' },
-              ...employees.map(e => ({ value: String(e.id), label: `${e.name} (${e.email})` })),
+              ...employees.map((e) => ({
+                value: String(e.id),
+                label: `${e.name} (${e.email})`,
+              })),
             ]}
           />
           <Input
@@ -468,7 +653,12 @@ export function AllocationsPage() {
             label="Expected Return Date (optional)"
             type="date"
             value={allocForm.expected_return_date}
-            onChange={e => setAllocForm({ ...allocForm, expected_return_date: e.target.value })}
+            onChange={(e) =>
+              setAllocForm({
+                ...allocForm,
+                expected_return_date: e.target.value,
+              })
+            }
           />
         </div>
       </Modal>
@@ -480,22 +670,49 @@ export function AllocationsPage() {
         title="Return Asset"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setShowReturnModal(false)}>Cancel</Button>
-            <Button variant="primary" loading={returnSaving} onClick={handleReturn}>Confirm Return</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setShowReturnModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              loading={returnSaving}
+              onClick={handleReturn}
+            >
+              Confirm Return
+            </Button>
           </>
         }
       >
         {returnAlloc && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-              Returning <strong>{returnAlloc.asset_tag}</strong> ({returnAlloc.asset_name})
-              from <strong>{returnAlloc.holder_employee_name || returnAlloc.holder_department_name}</strong>.
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--sp-4)',
+            }}
+          >
+            <p
+              style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-secondary)',
+              }}
+            >
+              Returning <strong>{returnAlloc.asset_tag}</strong> (
+              {returnAlloc.asset_name}) from{' '}
+              <strong>
+                {returnAlloc.holder_employee_name ||
+                  returnAlloc.holder_department_name}
+              </strong>
+              .
             </p>
             <Input
               id="return-notes"
               label="Condition Check-in Notes (optional)"
               value={returnNotes}
-              onChange={e => setReturnNotes(e.target.value)}
+              onChange={(e) => setReturnNotes(e.target.value)}
             />
           </div>
         )}
@@ -508,25 +725,54 @@ export function AllocationsPage() {
         title="Request Transfer"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setShowTransferModal(false)}>Cancel</Button>
-            <Button variant="primary" loading={transferSaving} onClick={handleCreateTransfer}>Submit Request</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setShowTransferModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              loading={transferSaving}
+              onClick={handleCreateTransfer}
+            >
+              Submit Request
+            </Button>
           </>
         }
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--sp-2)' }}>
-            Request a transfer of a currently-allocated asset to a different employee.
-            An asset manager or department head must approve the transfer.
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--sp-4)',
+          }}
+        >
+          <p
+            style={{
+              fontSize: 'var(--text-sm)',
+              color: 'var(--text-secondary)',
+              marginBottom: 'var(--sp-2)',
+            }}
+          >
+            Request a transfer of a currently-allocated asset to a different
+            employee. An asset manager or department head must approve the
+            transfer.
           </p>
           <Select
             id="transfer-asset"
             label="Asset (currently allocated)"
             required
             value={transferForm.asset_id}
-            onChange={e => setTransferForm({ ...transferForm, asset_id: e.target.value })}
+            onChange={(e) =>
+              setTransferForm({ ...transferForm, asset_id: e.target.value })
+            }
             options={[
               { value: '', label: 'Select an asset...' },
-              ...allocatedAssets.map(a => ({ value: String(a.id), label: `${a.asset_tag} — ${a.name}` })),
+              ...allocatedAssets.map((a) => ({
+                value: String(a.id),
+                label: `${a.asset_tag} — ${a.name}`,
+              })),
             ]}
           />
           <Select
@@ -534,10 +780,18 @@ export function AllocationsPage() {
             label="Transfer To"
             required
             value={transferForm.to_employee_id}
-            onChange={e => setTransferForm({ ...transferForm, to_employee_id: e.target.value })}
+            onChange={(e) =>
+              setTransferForm({
+                ...transferForm,
+                to_employee_id: e.target.value,
+              })
+            }
             options={[
               { value: '', label: 'Select an employee...' },
-              ...employees.map(e => ({ value: String(e.id), label: `${e.name} (${e.email})` })),
+              ...employees.map((e) => ({
+                value: String(e.id),
+                label: `${e.name} (${e.email})`,
+              })),
             ]}
           />
         </div>

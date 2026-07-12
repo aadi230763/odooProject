@@ -79,7 +79,9 @@ function ToastItem({
       className={`toast toast--${t.variant}`}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateX(0) scale(1)' : 'translateX(24px) scale(0.96)',
+        transform: visible
+          ? 'translateX(0) scale(1)'
+          : 'translateX(24px) scale(0.96)',
         transition: 'opacity 200ms ease, transform 200ms ease',
       }}
       role="alert"

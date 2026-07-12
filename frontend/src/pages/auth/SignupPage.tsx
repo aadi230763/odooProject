@@ -61,7 +61,11 @@ function validate(form: FormState): FormErrors {
 }
 
 // Password strength meter
-function getStrength(password: string): { level: number; label: string; color: string } {
+function getStrength(password: string): {
+  level: number;
+  label: string;
+  color: string;
+} {
   if (!password) return { level: 0, label: '', color: 'var(--border)' };
   let score = 0;
   if (password.length >= 8) score++;
@@ -142,14 +146,17 @@ export function SignupPage() {
           <div className="auth-logo__mark" aria-hidden="true">
             AF
           </div>
-          <h1 className="auth-logo__title">
-            Create Account
-          </h1>
+          <h1 className="auth-logo__title">Create Account</h1>
           <p className="auth-subtitle">Join AssetFlow as an Employee</p>
         </div>
 
         {errors.general && (
-          <div className="auth-alert" role="alert" aria-live="assertive" id="signup-error">
+          <div
+            className="auth-alert"
+            role="alert"
+            aria-live="assertive"
+            id="signup-error"
+          >
             {errors.general}
           </div>
         )}
@@ -192,7 +199,9 @@ export function SignupPage() {
                 Password
               </label>
               {form.password && (
-                <span style={{ fontSize: 'var(--text-xs)', color: strength.color }}>
+                <span
+                  style={{ fontSize: 'var(--text-xs)', color: strength.color }}
+                >
                   {strength.label}
                 </span>
               )}
@@ -247,7 +256,8 @@ export function SignupPage() {
                       flex: 1,
                       height: '3px',
                       borderRadius: '9999px',
-                      background: n <= strength.level ? strength.color : 'var(--border)',
+                      background:
+                        n <= strength.level ? strength.color : 'var(--border)',
                       transition: 'background 200ms ease',
                     }}
                   />

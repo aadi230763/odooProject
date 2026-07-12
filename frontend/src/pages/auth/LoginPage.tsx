@@ -78,7 +78,9 @@ export function LoginPage() {
         if (err.code === 'INVALID_CREDENTIALS') {
           setErrors({ general: 'Incorrect email or password.' });
         } else if (err.code === 'ACCOUNT_INACTIVE') {
-          setErrors({ general: 'Your account has been deactivated. Contact your admin.' });
+          setErrors({
+            general: 'Your account has been deactivated. Contact your admin.',
+          });
         } else if (err.fields) {
           setErrors(err.fields as FormErrors);
         } else {
@@ -103,12 +105,19 @@ export function LoginPage() {
           <h1 className="auth-logo__title">
             Asset<span>Flow</span>
           </h1>
-          <p className="auth-subtitle">Enterprise Asset &amp; Resource Management</p>
+          <p className="auth-subtitle">
+            Enterprise Asset &amp; Resource Management
+          </p>
         </div>
 
         {/* General error */}
         {errors.general && (
-          <div className="auth-alert" role="alert" aria-live="assertive" id="login-error">
+          <div
+            className="auth-alert"
+            role="alert"
+            aria-live="assertive"
+            id="login-error"
+          >
             {errors.general}
           </div>
         )}
@@ -135,7 +144,13 @@ export function LoginPage() {
           />
 
           <div className="field">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
               <label className="field-label" htmlFor="login-password">
                 Password
               </label>

@@ -8,9 +8,23 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { employeesApi, departmentsApi, type OrgEmployee, type UserRole, type Department } from '../../api/org';
+import {
+  employeesApi,
+  departmentsApi,
+  type OrgEmployee,
+  type UserRole,
+  type Department,
+} from '../../api/org';
 import { ApiError } from '../../api/client';
-import { Badge, Button, Input, Modal, Select, Spinner, Table } from '../../components/ui';
+import {
+  Badge,
+  Button,
+  Input,
+  Modal,
+  Select,
+  Spinner,
+  Table,
+} from '../../components/ui';
 import { useToast } from '../../hooks/useToast';
 import { useAuth } from '../../context/AuthContext';
 
@@ -86,7 +100,9 @@ export function EmployeeDirectoryTab() {
     }
   }, [search, roleFilter, statusFilter, deptFilter, toast]);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   // Debounced search
   useEffect(() => {
@@ -94,21 +110,31 @@ export function EmployeeDirectoryTab() {
     return () => clearTimeout(t);
   }, [search, loadData]);
 
-  const openRoleModal = (emp: OrgEmployee) => { setRoleModal(emp); setNewRole(emp.role); };
+  const openRoleModal = (emp: OrgEmployee) => {
+    setRoleModal(emp);
+    setNewRole(emp.role);
+  };
 
   const handleRoleSave = async () => {
     if (!roleModal) return;
     setSavingRole(true);
     try {
       const updated = await employeesApi.setRole(roleModal.id, newRole);
-      toast.success(`${roleModal.name}'s role updated to ${ROLE_LABELS[newRole]}.`);
+      toast.success(
+        `${roleModal.name}'s role updated to ${ROLE_LABELS[newRole]}.`,
+      );
       setRoleModal(null);
-      setEmployees(prev => prev.map(e => e.id === roleModal.id ? updated.employee : e));
+      setEmployees((prev) =>
+        prev.map((e) => (e.id === roleModal.id ? updated.employee : e)),
+      );
     } catch (err) {
       if (err instanceof ApiError && err.code === 'SELF_DEMOTION') {
         toast.error('Cannot remove your own admin role.');
       } else {
-        toast.error('Role update failed.', err instanceof ApiError ? err.message : '');
+        toast.error(
+          'Role update failed.',
+          err instanceof ApiError ? err.message : '',
+        );
       }
     } finally {
       setSavingRole(false);
@@ -121,14 +147,21 @@ export function EmployeeDirectoryTab() {
     setSavingStatus(true);
     try {
       const updated = await employeesApi.setStatus(statusModal.id, newStatus);
-      toast.success(`${statusModal.name} ${newStatus === 'active' ? 'activated' : 'deactivated'}.`);
+      toast.success(
+        `${statusModal.name} ${newStatus === 'active' ? 'activated' : 'deactivated'}.`,
+      );
       setStatusModal(null);
-      setEmployees(prev => prev.map(e => e.id === statusModal.id ? updated.employee : e));
+      setEmployees((prev) =>
+        prev.map((e) => (e.id === statusModal.id ? updated.employee : e)),
+      );
     } catch (err) {
       if (err instanceof ApiError && err.code === 'SELF_DEACTIVATION') {
         toast.error('You cannot deactivate your own account.');
       } else {
-        toast.error('Status update failed.', err instanceof ApiError ? err.message : '');
+        toast.error(
+          'Status update failed.',
+          err instanceof ApiError ? err.message : '',
+        );
       }
     } finally {
       setSavingStatus(false);
@@ -137,7 +170,7 @@ export function EmployeeDirectoryTab() {
 
   const deptOptions = [
     { value: '', label: 'All departments' },
-    ...departments.map(d => ({ value: String(d.id), label: d.name })),
+    ...departments.map((d) => ({ value: String(d.id), label: d.name })),
   ];
 
   const roleSelectOptions = [
@@ -150,30 +183,57 @@ export function EmployeeDirectoryTab() {
   return (
     <>
       {/* Filters */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr auto auto auto',
-        gap: 'var(--sp-3)',
-        marginBottom: 'var(--sp-5)',
-        alignItems: 'end',
-      }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto auto auto',
+          gap: 'var(--sp-3)',
+          marginBottom: 'var(--sp-5)',
+          alignItems: 'end',
+        }}
+      >
         <Input
           id="emp-search"
           label="Search"
           placeholder="Name or email…"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
-        <Select id="emp-role-filter" label="Role" value={roleFilter}
-          onChange={e => setRoleFilter(e.target.value)} options={ROLE_OPTIONS} />
-        <Select id="emp-status-filter" label="Status" value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)} options={STATUS_OPTIONS} />
-        <Select id="emp-dept-filter" label="Department" value={deptFilter}
-          onChange={e => setDeptFilter(e.target.value)} options={deptOptions} />
+        <Select
+          id="emp-role-filter"
+          label="Role"
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+          options={ROLE_OPTIONS}
+        />
+        <Select
+          id="emp-status-filter"
+          label="Status"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          options={STATUS_OPTIONS}
+        />
+        <Select
+          id="emp-dept-filter"
+          label="Department"
+          value={deptFilter}
+          onChange={(e) => setDeptFilter(e.target.value)}
+          options={deptOptions}
+        />
       </div>
 
-      <div style={{ marginBottom: 'var(--sp-3)', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-        {loading ? <Spinner size="xs" label="Loading" /> : `${employees.length} employee${employees.length !== 1 ? 's' : ''} found`}
+      <div
+        style={{
+          marginBottom: 'var(--sp-3)',
+          fontSize: 'var(--text-xs)',
+          color: 'var(--text-muted)',
+        }}
+      >
+        {loading ? (
+          <Spinner size="xs" label="Loading" />
+        ) : (
+          `${employees.length} employee${employees.length !== 1 ? 's' : ''} found`
+        )}
       </div>
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -184,32 +244,78 @@ export function EmployeeDirectoryTab() {
           empty="No employees match the current filters."
           columns={[
             {
-              key: 'name', header: 'Employee', render: (e) => (
+              key: 'name',
+              header: 'Employee',
+              render: (e) => (
                 <div>
-                  <p style={{ fontWeight: 'var(--fw-medium)', color: 'var(--text-primary)' }}>
+                  <p
+                    style={{
+                      fontWeight: 'var(--fw-medium)',
+                      color: 'var(--text-primary)',
+                    }}
+                  >
                     {e.name}
                     {String(e.id) === currentUser?.id ? (
-                      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--primary)', marginLeft: 'var(--sp-2)' }}>you</span>
+                      <span
+                        style={{
+                          fontSize: 'var(--text-xs)',
+                          color: 'var(--primary)',
+                          marginLeft: 'var(--sp-2)',
+                        }}
+                      >
+                        you
+                      </span>
                     ) : null}
                   </p>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>{e.email}</p>
+                  <p
+                    style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    {e.email}
+                  </p>
                 </div>
-              )
+              ),
             },
             {
-              key: 'role', header: 'Role',
-              render: (e) => <Badge variant={ROLE_BADGE[e.role]}>{ROLE_LABELS[e.role]}</Badge>
+              key: 'role',
+              header: 'Role',
+              render: (e) => (
+                <Badge variant={ROLE_BADGE[e.role]}>
+                  {ROLE_LABELS[e.role]}
+                </Badge>
+              ),
             },
             {
-              key: 'dept', header: 'Department',
-              render: (e) => e.department_name ?? <span style={{ color: 'var(--text-muted)' }}>—</span>
+              key: 'dept',
+              header: 'Department',
+              render: (e) =>
+                e.department_name ?? (
+                  <span style={{ color: 'var(--text-muted)' }}>—</span>
+                ),
             },
-            { key: 'status', header: 'Status', render: (e) => <Badge variant={e.status === 'active' ? 'success' : 'muted'}>{e.status}</Badge> },
             {
-              key: 'actions', header: '', width: '160px',
+              key: 'status',
+              header: 'Status',
+              render: (e) => (
+                <Badge variant={e.status === 'active' ? 'success' : 'muted'}>
+                  {e.status}
+                </Badge>
+              ),
+            },
+            {
+              key: 'actions',
+              header: '',
+              width: '160px',
               render: (e) => (
                 <div style={{ display: 'flex', gap: 'var(--sp-2)' }}>
-                  <Button id={`btn-set-role-${e.id}`} variant="ghost" size="sm" onClick={() => openRoleModal(e)}>
+                  <Button
+                    id={`btn-set-role-${e.id}`}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => openRoleModal(e)}
+                  >
                     Set Role
                   </Button>
                   <Button
@@ -217,12 +323,17 @@ export function EmployeeDirectoryTab() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setStatusModal(e)}
-                    style={{ color: e.status === 'active' ? 'var(--danger)' : 'var(--success)' }}
+                    style={{
+                      color:
+                        e.status === 'active'
+                          ? 'var(--danger)'
+                          : 'var(--success)',
+                    }}
                   >
                     {e.status === 'active' ? 'Deactivate' : 'Activate'}
                   </Button>
                 </div>
-              )
+              ),
             },
           ]}
         />
@@ -235,26 +346,62 @@ export function EmployeeDirectoryTab() {
         title={`Set Role — ${roleModal?.name}`}
         footer={
           <>
-            <Button variant="secondary" size="md" onClick={() => setRoleModal(null)}>Cancel</Button>
-            <Button id="btn-confirm-role" variant="primary" size="md" loading={savingRole} onClick={handleRoleSave}>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => setRoleModal(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              id="btn-confirm-role"
+              variant="primary"
+              size="md"
+              loading={savingRole}
+              onClick={handleRoleSave}
+            >
               Apply Role
             </Button>
           </>
         }
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
-          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-            Current role: <Badge variant={roleModal ? ROLE_BADGE[roleModal.role] : 'muted'}>{roleModal ? ROLE_LABELS[roleModal.role] : ''}</Badge>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--sp-4)',
+          }}
+        >
+          <p
+            style={{
+              fontSize: 'var(--text-sm)',
+              color: 'var(--text-secondary)',
+            }}
+          >
+            Current role:{' '}
+            <Badge variant={roleModal ? ROLE_BADGE[roleModal.role] : 'muted'}>
+              {roleModal ? ROLE_LABELS[roleModal.role] : ''}
+            </Badge>
           </p>
           <Select
             id="new-role-select"
             label="New role"
             value={newRole}
-            onChange={e => setNewRole(e.target.value as UserRole)}
+            onChange={(e) => setNewRole(e.target.value as UserRole)}
             options={roleSelectOptions}
           />
-          <div style={{ background: 'var(--warning-soft)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 'var(--radius-md)', padding: 'var(--sp-3)', fontSize: 'var(--text-xs)', color: 'var(--warning)' }}>
-            ⚠ Role changes take effect immediately on the employee's next request.
+          <div
+            style={{
+              background: 'var(--warning-soft)',
+              border: '1px solid rgba(245,158,11,0.2)',
+              borderRadius: 'var(--radius-md)',
+              padding: 'var(--sp-3)',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--warning)',
+            }}
+          >
+            ⚠ Role changes take effect immediately on the employee's next
+            request.
           </div>
         </div>
       </Modal>
@@ -263,10 +410,20 @@ export function EmployeeDirectoryTab() {
       <Modal
         open={!!statusModal}
         onClose={() => setStatusModal(null)}
-        title={statusModal?.status === 'active' ? 'Deactivate Employee' : 'Activate Employee'}
+        title={
+          statusModal?.status === 'active'
+            ? 'Deactivate Employee'
+            : 'Activate Employee'
+        }
         footer={
           <>
-            <Button variant="secondary" size="md" onClick={() => setStatusModal(null)}>Cancel</Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => setStatusModal(null)}
+            >
+              Cancel
+            </Button>
             <Button
               id="btn-confirm-status"
               variant={statusModal?.status === 'active' ? 'danger' : 'primary'}
@@ -279,11 +436,26 @@ export function EmployeeDirectoryTab() {
           </>
         }
       >
-        <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>
-          {statusModal?.status === 'active'
-            ? <>Deactivating <strong style={{ color: 'var(--text-primary)' }}>{statusModal?.name}</strong> will prevent them from logging in. This can be reversed.</>
-            : <>Reactivating <strong style={{ color: 'var(--text-primary)' }}>{statusModal?.name}</strong> will restore their access.</>
-          }
+        <p
+          style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}
+        >
+          {statusModal?.status === 'active' ? (
+            <>
+              Deactivating{' '}
+              <strong style={{ color: 'var(--text-primary)' }}>
+                {statusModal?.name}
+              </strong>{' '}
+              will prevent them from logging in. This can be reversed.
+            </>
+          ) : (
+            <>
+              Reactivating{' '}
+              <strong style={{ color: 'var(--text-primary)' }}>
+                {statusModal?.name}
+              </strong>{' '}
+              will restore their access.
+            </>
+          )}
         </p>
       </Modal>
     </>

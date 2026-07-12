@@ -13,7 +13,14 @@ export interface AssetDocument {
 }
 
 export type AssetCondition = 'new' | 'good' | 'fair' | 'poor';
-export type AssetStatus = 'available' | 'allocated' | 'reserved' | 'under_maintenance' | 'lost' | 'retired' | 'disposed';
+export type AssetStatus =
+  | 'available'
+  | 'allocated'
+  | 'reserved'
+  | 'under_maintenance'
+  | 'lost'
+  | 'retired'
+  | 'disposed';
 
 export interface Asset {
   id: number;
@@ -69,9 +76,14 @@ export const assetsApi = {
   update: (id: number, payload: Partial<Asset>) =>
     api.patch<{ asset: Asset }>(`/assets/${id}`, payload),
 
-  getDocuments: (id: number) => api.get<{ documents: AssetDocument[] }>(`/assets/${id}/documents`),
+  getDocuments: (id: number) =>
+    api.get<{ documents: AssetDocument[] }>(`/assets/${id}/documents`),
 
-  uploadDocument: async (id: number, file: File, docType: 'photo' | 'document') => {
+  uploadDocument: async (
+    id: number,
+    file: File,
+    docType: 'photo' | 'document',
+  ) => {
     // We cannot use the standard api.post because it sets Content-Type to application/json.
     // So we use standard fetch for multipart/form-data.
     const token = localStorage.getItem('af_token');

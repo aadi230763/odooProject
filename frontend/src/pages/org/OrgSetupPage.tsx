@@ -61,9 +61,13 @@ export function OrgSetupPage() {
                 padding: 'var(--sp-3) var(--sp-4)',
                 background: 'none',
                 border: 'none',
-                borderBottom: isActive ? '2px solid var(--primary)' : '2px solid transparent',
+                borderBottom: isActive
+                  ? '2px solid var(--primary)'
+                  : '2px solid transparent',
                 color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
-                fontWeight: isActive ? 'var(--fw-semibold)' : 'var(--fw-medium)',
+                fontWeight: isActive
+                  ? 'var(--fw-semibold)'
+                  : 'var(--fw-medium)',
                 fontSize: 'var(--text-sm)',
                 cursor: 'pointer',
                 transition: 'color var(--t-fast), border-color var(--t-fast)',

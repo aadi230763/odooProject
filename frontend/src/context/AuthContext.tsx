@@ -19,7 +19,8 @@ import React, {
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
-export type UserRole = 'admin' | 'asset_manager' | 'department_head' | 'employee';
+export type UserRole =
+  'admin' | 'asset_manager' | 'department_head' | 'employee';
 
 export interface AuthUser {
   id: string;

@@ -28,9 +28,7 @@ interface NavSection {
 
 const NAV: NavSection[] = [
   {
-    items: [
-      { label: 'Dashboard', to: '/dashboard', icon: '⬜' },
-    ],
+    items: [{ label: 'Dashboard', to: '/dashboard', icon: '⬜' }],
   },
   {
     section: 'Assets',
@@ -104,7 +102,11 @@ export function Sidebar() {
   return (
     <nav className="sidebar" aria-label="Main navigation">
       {/* Logo */}
-      <NavLink to="/dashboard" className="sidebar-logo" aria-label="AssetFlow home">
+      <NavLink
+        to="/dashboard"
+        className="sidebar-logo"
+        aria-label="AssetFlow home"
+      >
         <div className="sidebar-logo__mark" aria-hidden="true">
           AF
         </div>
@@ -130,7 +132,9 @@ export function Sidebar() {
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+                  className={({ isActive }) =>
+                    `nav-item${isActive ? ' active' : ''}`
+                  }
                   id={`nav-${item.to.replace('/', '')}`}
                 >
                   <span className="nav-icon" aria-hidden="true">

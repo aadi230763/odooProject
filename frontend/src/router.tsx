@@ -31,12 +31,26 @@ import { NotFoundPage } from './pages/NotFoundPage';
 
 function ComingSoon({ name }: { name: string }) {
   return (
-    <div style={{ padding: 'var(--sp-8)', textAlign: 'center', color: 'var(--text-muted)' }}>
+    <div
+      style={{
+        padding: 'var(--sp-8)',
+        textAlign: 'center',
+        color: 'var(--text-muted)',
+      }}
+    >
       <div style={{ fontSize: '3rem', marginBottom: 'var(--sp-4)' }}>🚧</div>
-      <h2 style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)', marginBottom: 'var(--sp-2)' }}>
+      <h2
+        style={{
+          fontSize: 'var(--text-xl)',
+          color: 'var(--text-primary)',
+          marginBottom: 'var(--sp-2)',
+        }}
+      >
         {name}
       </h2>
-      <p style={{ fontSize: 'var(--text-sm)' }}>This module is coming in a future phase.</p>
+      <p style={{ fontSize: 'var(--text-sm)' }}>
+        This module is coming in a future phase.
+      </p>
     </div>
   );
 }
@@ -83,7 +97,11 @@ function RedirectIfAuthed() {
 function RequireRole({ roles }: { roles: UserRole[] }) {
   const { hasRole, isLoading } = useAuth();
   if (isLoading) return null;
-  return roles.some((r) => hasRole(r)) ? <Outlet /> : <Navigate to="/dashboard" replace />;
+  return roles.some((r) => hasRole(r)) ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/dashboard" replace />
+  );
 }
 
 // ── Router ────────────────────────────────────────────────────────────────────
@@ -118,10 +136,16 @@ export function AppRouter() {
             <Route path="allocations" element={<AllocationsPage />} />
 
             {/* Booking (Phase 7) */}
-            <Route path="bookings" element={<ComingSoon name="Resource Booking" />} />
+            <Route
+              path="bookings"
+              element={<ComingSoon name="Resource Booking" />}
+            />
 
             {/* Maintenance (Phase 8) */}
-            <Route path="maintenance" element={<ComingSoon name="Maintenance" />} />
+            <Route
+              path="maintenance"
+              element={<ComingSoon name="Maintenance" />}
+            />
 
             {/* Audits (Phase 9) */}
             <Route path="audits" element={<ComingSoon name="Audit Cycles" />} />
@@ -133,11 +157,17 @@ export function AppRouter() {
 
             {/* Admin + Asset Manager */}
             <Route element={<RequireRole roles={['admin', 'asset_manager']} />}>
-              <Route path="logs" element={<ComingSoon name="Activity Logs" />} />
+              <Route
+                path="logs"
+                element={<ComingSoon name="Activity Logs" />}
+              />
             </Route>
 
             {/* Notifications (Phase 10) */}
-            <Route path="notifications" element={<ComingSoon name="Notifications" />} />
+            <Route
+              path="notifications"
+              element={<ComingSoon name="Notifications" />}
+            />
           </Route>
         </Route>
 

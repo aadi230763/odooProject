@@ -48,7 +48,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       .join(' ');
 
     return (
-      <button ref={ref} className={classes} disabled={disabled || loading} {...props}>
+      <button
+        ref={ref}
+        className={classes}
+        disabled={disabled || loading}
+        {...props}
+      >
         {loading ? (
           <span className="spinner spinner--sm" aria-hidden="true" />
         ) : (
@@ -112,7 +117,8 @@ Input.displayName = 'Input';
 
 // ── Badge ──────────────────────────────────────────────────────────────────────
 
-type BadgeVariant = 'success' | 'warning' | 'danger' | 'info' | 'primary' | 'muted';
+type BadgeVariant =
+  'success' | 'warning' | 'danger' | 'info' | 'primary' | 'muted';
 
 interface BadgeProps {
   variant?: BadgeVariant;
@@ -120,9 +126,16 @@ interface BadgeProps {
   className?: string;
 }
 
-export function Badge({ variant = 'muted', children, className = '' }: BadgeProps) {
+export function Badge({
+  variant = 'muted',
+  children,
+  className = '',
+}: BadgeProps) {
   return (
-    <span className={`badge badge--${variant} ${className}`} aria-label={`Status: ${children}`}>
+    <span
+      className={`badge badge--${variant} ${className}`}
+      aria-label={`Status: ${children}`}
+    >
       {children}
     </span>
   );
@@ -138,7 +151,11 @@ interface SpinnerProps {
   label?: string;
 }
 
-export function Spinner({ size = 'md', className = '', label = 'Loading…' }: SpinnerProps) {
+export function Spinner({
+  size = 'md',
+  className = '',
+  label = 'Loading…',
+}: SpinnerProps) {
   return (
     <span
       className={`spinner spinner--${size} ${className}`}
@@ -157,9 +174,17 @@ interface CardProps {
   style?: React.CSSProperties;
 }
 
-export function Card({ glass = false, children, className = '', style }: CardProps) {
+export function Card({
+  glass = false,
+  children,
+  className = '',
+  style,
+}: CardProps) {
   return (
-    <div className={`card ${glass ? 'card--glass' : ''} ${className}`} style={style}>
+    <div
+      className={`card ${glass ? 'card--glass' : ''} ${className}`}
+      style={style}
+    >
       {children}
     </div>
   );
@@ -176,7 +201,14 @@ interface ModalProps {
   footer?: React.ReactNode;
 }
 
-export function Modal({ open, onClose, title, children, size = 'md', footer }: ModalProps) {
+export function Modal({
+  open,
+  onClose,
+  title,
+  children,
+  size = 'md',
+  footer,
+}: ModalProps) {
   // Close on Escape
   React.useEffect(() => {
     if (!open) return;
@@ -224,7 +256,13 @@ export function Modal({ open, onClose, title, children, size = 'md', footer }: M
         }}
       >
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <h2
             id="modal-title"
             style={{
@@ -294,7 +332,13 @@ interface TableProps<T> {
   empty?: React.ReactNode;
 }
 
-export function Table<T>({ columns, data, keyExtractor, loading, empty }: TableProps<T>) {
+export function Table<T>({
+  columns,
+  data,
+  keyExtractor,
+  loading,
+  empty,
+}: TableProps<T>) {
   return (
     <div style={{ overflowX: 'auto', borderRadius: 'var(--radius-xl)' }}>
       <table
@@ -334,7 +378,10 @@ export function Table<T>({ columns, data, keyExtractor, loading, empty }: TableP
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan={columns.length} style={{ padding: 'var(--sp-10)', textAlign: 'center' }}>
+              <td
+                colSpan={columns.length}
+                style={{ padding: 'var(--sp-10)', textAlign: 'center' }}
+              >
                 <Spinner label="Loading table data" />
               </td>
             </tr>
@@ -360,16 +407,21 @@ export function Table<T>({ columns, data, keyExtractor, loading, empty }: TableP
                   transition: 'background var(--t-fast)',
                 }}
                 onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.background = 'var(--bg-surface-2)')
+                  ((e.currentTarget as HTMLElement).style.background =
+                    'var(--bg-surface-2)')
                 }
                 onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.background = 'transparent')
+                  ((e.currentTarget as HTMLElement).style.background =
+                    'transparent')
                 }
               >
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    style={{ padding: 'var(--sp-3) var(--sp-4)', color: 'var(--text-primary)' }}
+                    style={{
+                      padding: 'var(--sp-3) var(--sp-4)',
+                      color: 'var(--text-primary)',
+                    }}
                   >
                     {col.render(row, i)}
                   </td>
@@ -393,7 +445,10 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, options, placeholder, id, className = '', ...props }, ref) => {
+  (
+    { label, error, options, placeholder, id, className = '', ...props },
+    ref,
+  ) => {
     const selectId = id ?? `select-${Math.random().toString(36).slice(2, 7)}`;
     return (
       <div className="field">
@@ -456,7 +511,13 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
   return (
     <div
       className="page-header"
-      style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 'var(--sp-4)', flexWrap: 'wrap' }}
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        gap: 'var(--sp-4)',
+        flexWrap: 'wrap',
+      }}
     >
       <div>
         <h1 className="page-title">{title}</h1>
@@ -482,7 +543,10 @@ export class ErrorBoundary extends React.Component<
   { children: React.ReactNode; fallback?: React.ReactNode },
   ErrorBoundaryState
 > {
-  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
+  constructor(props: {
+    children: React.ReactNode;
+    fallback?: React.ReactNode;
+  }) {
     super(props);
     this.state = { hasError: false };
   }
@@ -508,12 +572,17 @@ export class ErrorBoundary extends React.Component<
           }}
         >
           <div style={{ fontSize: '3rem' }}>⚠️</div>
-          <h1 style={{ fontSize: 'var(--text-2xl)', color: 'var(--text-primary)' }}>
+          <h1
+            style={{
+              fontSize: 'var(--text-2xl)',
+              color: 'var(--text-primary)',
+            }}
+          >
             Something went wrong
           </h1>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '480px' }}>
-            An unexpected error occurred. Please refresh the page or contact support if the
-            problem persists.
+            An unexpected error occurred. Please refresh the page or contact
+            support if the problem persists.
           </p>
           <button
             className="btn btn--primary btn--md"

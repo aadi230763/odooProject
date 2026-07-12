@@ -7,7 +7,8 @@ import { api } from './client';
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 export type AllocationStatus = 'active' | 'returned' | 'overdue';
-export type TransferStatus = 'requested' | 'approved' | 'rejected' | 'completed';
+export type TransferStatus =
+  'requested' | 'approved' | 'rejected' | 'completed';
 
 export interface Allocation {
   id: number;
@@ -49,11 +50,16 @@ export interface TransferRequest {
 // ── API calls ──────────────────────────────────────────────────────────────────
 
 export const allocationsApi = {
-  list: (params?: { asset_id?: number; status?: string; holder_employee_id?: number }) => {
+  list: (params?: {
+    asset_id?: number;
+    status?: string;
+    holder_employee_id?: number;
+  }) => {
     const qs = new URLSearchParams();
     if (params?.asset_id) qs.set('asset_id', String(params.asset_id));
     if (params?.status) qs.set('status', params.status);
-    if (params?.holder_employee_id) qs.set('holder_employee_id', String(params.holder_employee_id));
+    if (params?.holder_employee_id)
+      qs.set('holder_employee_id', String(params.holder_employee_id));
     const query = qs.toString() ? `?${qs.toString()}` : '';
     return api.get<{ allocations: Allocation[] }>(`/allocations${query}`);
   },
@@ -66,7 +72,10 @@ export const allocationsApi = {
   }) => api.post<{ allocation: Allocation }>('/allocations', payload),
 
   return: (id: number, payload?: { checkin_condition_notes?: string | null }) =>
-    api.patch<{ allocation: Allocation }>(`/allocations/${id}/return`, payload ?? {}),
+    api.patch<{ allocation: Allocation }>(
+      `/allocations/${id}/return`,
+      payload ?? {},
+    ),
 };
 
 export const transfersApi = {

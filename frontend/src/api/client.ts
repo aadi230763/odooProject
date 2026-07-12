@@ -28,7 +28,12 @@ export class ApiError extends Error {
   fields?: Record<string, string>;
   status: number;
 
-  constructor(message: string, code: string, status: number, fields?: Record<string, string>) {
+  constructor(
+    message: string,
+    code: string,
+    status: number,
+    fields?: Record<string, string>,
+  ) {
     super(message);
     this.name = 'ApiError';
     this.code = code;
@@ -67,7 +72,11 @@ async function request<T>(
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   } catch {
-    throw new ApiError('Network error — backend unreachable.', 'NETWORK_ERROR', 0);
+    throw new ApiError(
+      'Network error — backend unreachable.',
+      'NETWORK_ERROR',
+      0,
+    );
   }
 
   // Parse JSON (backend always returns JSON)

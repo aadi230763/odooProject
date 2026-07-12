@@ -19,7 +19,8 @@ export function ForgotPasswordPage() {
 
   const validate = (value: string) => {
     if (!value.trim()) return 'Email is required.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Enter a valid email address.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+      return 'Enter a valid email address.';
     return '';
   };
 
@@ -70,8 +71,14 @@ export function ForgotPasswordPage() {
             id="forgot-password-success"
           >
             <div style={{ fontSize: '2.5rem' }}>📧</div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>
-              If an account exists for <strong style={{ color: 'var(--text-primary)' }}>{email}</strong>,
+            <p
+              style={{
+                color: 'var(--text-secondary)',
+                fontSize: 'var(--text-sm)',
+              }}
+            >
+              If an account exists for{' '}
+              <strong style={{ color: 'var(--text-primary)' }}>{email}</strong>,
               you&apos;ll receive a reset link shortly.
             </p>
           </div>
@@ -83,8 +90,15 @@ export function ForgotPasswordPage() {
             aria-label="Forgot password form"
             id="forgot-password-form"
           >
-            <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', marginTop: '-var(--sp-2)' }}>
-              Enter your work email and we&apos;ll send you a link to reset your password.
+            <p
+              style={{
+                color: 'var(--text-secondary)',
+                fontSize: 'var(--text-sm)',
+                marginTop: '-var(--sp-2)',
+              }}
+            >
+              Enter your work email and we&apos;ll send you a link to reset your
+              password.
             </p>
 
             <Input

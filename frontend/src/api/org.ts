@@ -29,7 +29,8 @@ export interface AssetCategory {
   updated_at: string;
 }
 
-export type UserRole = 'admin' | 'asset_manager' | 'department_head' | 'employee';
+export type UserRole =
+  'admin' | 'asset_manager' | 'department_head' | 'employee';
 
 export interface OrgEmployee {
   id: number;
@@ -48,13 +49,24 @@ export interface OrgEmployee {
 export const departmentsApi = {
   list: () => api.get<{ departments: Department[] }>('/org/departments'),
 
-  get: (id: number) => api.get<{ department: Department }>(`/org/departments/${id}`),
+  get: (id: number) =>
+    api.get<{ department: Department }>(`/org/departments/${id}`),
 
-  create: (payload: { name: string; head_employee_id?: number | null; parent_department_id?: number | null }) =>
-    api.post<{ department: Department }>('/org/departments', payload),
+  create: (payload: {
+    name: string;
+    head_employee_id?: number | null;
+    parent_department_id?: number | null;
+  }) => api.post<{ department: Department }>('/org/departments', payload),
 
-  update: (id: number, payload: Partial<{ name: string; head_employee_id: number | null; parent_department_id: number | null; status: string }>) =>
-    api.patch<{ department: Department }>(`/org/departments/${id}`, payload),
+  update: (
+    id: number,
+    payload: Partial<{
+      name: string;
+      head_employee_id: number | null;
+      parent_department_id: number | null;
+      status: string;
+    }>,
+  ) => api.patch<{ department: Department }>(`/org/departments/${id}`, payload),
 
   deactivate: (id: number) => api.delete<null>(`/org/departments/${id}`),
 };
@@ -64,13 +76,22 @@ export const departmentsApi = {
 export const categoriesApi = {
   list: () => api.get<{ categories: AssetCategory[] }>('/org/categories'),
 
-  get: (id: number) => api.get<{ category: AssetCategory }>(`/org/categories/${id}`),
+  get: (id: number) =>
+    api.get<{ category: AssetCategory }>(`/org/categories/${id}`),
 
-  create: (payload: { name: string; custom_fields?: Record<string, unknown> | null }) =>
-    api.post<{ category: AssetCategory }>('/org/categories', payload),
+  create: (payload: {
+    name: string;
+    custom_fields?: Record<string, unknown> | null;
+  }) => api.post<{ category: AssetCategory }>('/org/categories', payload),
 
-  update: (id: number, payload: Partial<{ name: string; custom_fields: Record<string, unknown> | null; status: string }>) =>
-    api.patch<{ category: AssetCategory }>(`/org/categories/${id}`, payload),
+  update: (
+    id: number,
+    payload: Partial<{
+      name: string;
+      custom_fields: Record<string, unknown> | null;
+      status: string;
+    }>,
+  ) => api.patch<{ category: AssetCategory }>(`/org/categories/${id}`, payload),
 
   deactivate: (id: number) => api.delete<null>(`/org/categories/${id}`),
 };
@@ -90,16 +111,20 @@ export const employeesApi = {
     if (params?.search) qs.set('search', params.search);
     if (params?.role) qs.set('role', params.role);
     if (params?.status) qs.set('status', params.status);
-    if (params?.department_id) qs.set('department_id', String(params.department_id));
+    if (params?.department_id)
+      qs.set('department_id', String(params.department_id));
     const query = qs.toString() ? `?${qs.toString()}` : '';
     return api.get<{ employees: OrgEmployee[] }>(`/org/employees${query}`);
   },
 
-  get: (id: number) => api.get<{ employee: OrgEmployee }>(`/org/employees/${id}`),
+  get: (id: number) =>
+    api.get<{ employee: OrgEmployee }>(`/org/employees/${id}`),
 
   setRole: (id: number, role: UserRole) =>
     api.patch<{ employee: OrgEmployee }>(`/org/employees/${id}/role`, { role }),
 
   setStatus: (id: number, status: 'active' | 'inactive') =>
-    api.patch<{ employee: OrgEmployee }>(`/org/employees/${id}/status`, { status }),
+    api.patch<{ employee: OrgEmployee }>(`/org/employees/${id}/status`, {
+      status,
+    }),
 };

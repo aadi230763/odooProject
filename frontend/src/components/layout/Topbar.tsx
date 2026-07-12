@@ -24,8 +24,9 @@ export function Topbar() {
 
   // Match by prefix so nested routes keep the right title
   const title =
-    Object.entries(ROUTE_TITLES).find(([route]) => pathname.startsWith(route))?.[1] ??
-    'AssetFlow';
+    Object.entries(ROUTE_TITLES).find(([route]) =>
+      pathname.startsWith(route),
+    )?.[1] ?? 'AssetFlow';
 
   return (
     <header className="topbar" role="banner">

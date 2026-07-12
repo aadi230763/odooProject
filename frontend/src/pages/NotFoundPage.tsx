@@ -33,10 +33,21 @@ export function NotFoundPage() {
       <h1 style={{ fontSize: 'var(--text-2xl)', color: 'var(--text-primary)' }}>
         Page not found
       </h1>
-      <p style={{ color: 'var(--text-secondary)', maxWidth: '380px', fontSize: 'var(--text-sm)' }}>
-        The page you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
+      <p
+        style={{
+          color: 'var(--text-secondary)',
+          maxWidth: '380px',
+          fontSize: 'var(--text-sm)',
+        }}
+      >
+        The page you&apos;re looking for doesn&apos;t exist or you don&apos;t
+        have permission to view it.
       </p>
-      <Link to="/dashboard" className="btn btn--primary btn--md" id="link-back-home">
+      <Link
+        to="/dashboard"
+        className="btn btn--primary btn--md"
+        id="link-back-home"
+      >
         Go to Dashboard
       </Link>
     </div>

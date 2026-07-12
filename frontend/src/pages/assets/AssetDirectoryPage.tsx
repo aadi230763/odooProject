@@ -2,7 +2,15 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { assetsApi, type Asset, type AssetStatus } from '../../api/assets';
 import { categoriesApi, type AssetCategory } from '../../api/org';
-import { Badge, Button, Input, Select, Spinner, Table, PageHeader } from '../../components/ui';
+import {
+  Badge,
+  Button,
+  Input,
+  Select,
+  Spinner,
+  Table,
+  PageHeader,
+} from '../../components/ui';
 import { useToast } from '../../hooks/useToast';
 import { useAuth } from '../../context/AuthContext';
 
@@ -17,7 +25,10 @@ const STATUS_OPTIONS = [
   { value: 'disposed', label: 'Disposed' },
 ];
 
-const STATUS_BADGE: Record<AssetStatus, 'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'> = {
+const STATUS_BADGE: Record<
+  AssetStatus,
+  'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'
+> = {
   available: 'success',
   allocated: 'primary',
   reserved: 'info',
@@ -42,7 +53,8 @@ export function AssetDirectoryPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
 
-  const canManageAssets = user?.role === 'admin' || user?.role === 'asset_manager';
+  const canManageAssets =
+    user?.role === 'admin' || user?.role === 'asset_manager';
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -65,7 +77,9 @@ export function AssetDirectoryPage() {
     }
   }, [search, categoryFilter, statusFilter, locationFilter, toast]);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   // Debounced search
   useEffect(() => {
@@ -75,7 +89,7 @@ export function AssetDirectoryPage() {
 
   const catOptions = [
     { value: '', label: 'All categories' },
-    ...categories.map(c => ({ value: String(c.id), label: c.name })),
+    ...categories.map((c) => ({ value: String(c.id), label: c.name })),
   ];
 
   return (
@@ -93,35 +107,57 @@ export function AssetDirectoryPage() {
       />
 
       {/* Filters */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr auto auto 1fr',
-        gap: 'var(--sp-3)',
-        marginBottom: 'var(--sp-5)',
-        alignItems: 'end',
-      }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr auto auto 1fr',
+          gap: 'var(--sp-3)',
+          marginBottom: 'var(--sp-5)',
+          alignItems: 'end',
+        }}
+      >
         <Input
           id="asset-search"
           label="Search"
           placeholder="Name, tag, or serial..."
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
-        <Select id="asset-cat-filter" label="Category" value={categoryFilter}
-          onChange={e => setCategoryFilter(e.target.value)} options={catOptions} />
-        <Select id="asset-status-filter" label="Status" value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)} options={STATUS_OPTIONS} />
+        <Select
+          id="asset-cat-filter"
+          label="Category"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          options={catOptions}
+        />
+        <Select
+          id="asset-status-filter"
+          label="Status"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          options={STATUS_OPTIONS}
+        />
         <Input
           id="asset-location"
           label="Location"
           placeholder="e.g. Server Room"
           value={locationFilter}
-          onChange={e => setLocationFilter(e.target.value)}
+          onChange={(e) => setLocationFilter(e.target.value)}
         />
       </div>
 
-      <div style={{ marginBottom: 'var(--sp-3)', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-        {loading ? <Spinner size="xs" label="Loading" /> : `${assets.length} asset${assets.length !== 1 ? 's' : ''} found`}
+      <div
+        style={{
+          marginBottom: 'var(--sp-3)',
+          fontSize: 'var(--text-xs)',
+          color: 'var(--text-muted)',
+        }}
+      >
+        {loading ? (
+          <Spinner size="xs" label="Loading" />
+        ) : (
+          `${assets.length} asset${assets.length !== 1 ? 's' : ''} found`
+        )}
       </div>
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -132,35 +168,71 @@ export function AssetDirectoryPage() {
           empty="No assets match the current filters."
           columns={[
             {
-              key: 'tag', header: 'Asset Tag', render: (a) => (
-                <strong style={{ color: 'var(--primary)', cursor: 'pointer' }} onClick={() => navigate(`/assets/${a.id}`)}>
+              key: 'tag',
+              header: 'Asset Tag',
+              render: (a) => (
+                <strong
+                  style={{ color: 'var(--primary)', cursor: 'pointer' }}
+                  onClick={() => navigate(`/assets/${a.id}`)}
+                >
                   {a.asset_tag}
                 </strong>
-              )
+              ),
             },
             {
-              key: 'name', header: 'Name', render: (a) => (
-                <div>
-                  <div style={{ fontWeight: 'var(--fw-medium)', color: 'var(--text-primary)' }}>{a.name}</div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>{a.category_name}</div>
-                </div>
-              )
-            },
-            {
-              key: 'status', header: 'Status',
-              render: (a) => <Badge variant={STATUS_BADGE[a.status]}>{a.status.replace('_', ' ')}</Badge>
-            },
-            {
-              key: 'location', header: 'Location',
-              render: (a) => a.location || <span style={{ color: 'var(--text-muted)' }}>—</span>
-            },
-            {
-              key: 'actions', header: '', width: '80px',
+              key: 'name',
+              header: 'Name',
               render: (a) => (
-                <Button variant="ghost" size="sm" onClick={() => navigate(`/assets/${a.id}`)}>
+                <div>
+                  <div
+                    style={{
+                      fontWeight: 'var(--fw-medium)',
+                      color: 'var(--text-primary)',
+                    }}
+                  >
+                    {a.name}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    {a.category_name}
+                  </div>
+                </div>
+              ),
+            },
+            {
+              key: 'status',
+              header: 'Status',
+              render: (a) => (
+                <Badge variant={STATUS_BADGE[a.status]}>
+                  {a.status.replace('_', ' ')}
+                </Badge>
+              ),
+            },
+            {
+              key: 'location',
+              header: 'Location',
+              render: (a) =>
+                a.location || (
+                  <span style={{ color: 'var(--text-muted)' }}>—</span>
+                ),
+            },
+            {
+              key: 'actions',
+              header: '',
+              width: '80px',
+              render: (a) => (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate(`/assets/${a.id}`)}
+                >
                   View
                 </Button>
-              )
+              ),
             },
           ]}
         />

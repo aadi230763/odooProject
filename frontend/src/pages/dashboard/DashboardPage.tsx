@@ -22,10 +22,27 @@ interface KpiCard {
 const PLACEHOLDER_KPIS: KpiCard[] = [
   { id: 'assets-available', label: 'Assets Available', value: '—', icon: '📦' },
   { id: 'assets-allocated', label: 'Allocated', value: '—', icon: '🔗' },
-  { id: 'maintenance-today', label: 'Under Maintenance', value: '—', icon: '🔧' },
+  {
+    id: 'maintenance-today',
+    label: 'Under Maintenance',
+    value: '—',
+    icon: '🔧',
+  },
   { id: 'active-bookings', label: 'Active Bookings', value: '—', icon: '📅' },
-  { id: 'pending-transfers', label: 'Pending Transfers', value: '—', icon: '🔄', variant: 'warning' },
-  { id: 'overdue-returns', label: 'Overdue Returns', value: '—', icon: '⚠️', variant: 'danger' },
+  {
+    id: 'pending-transfers',
+    label: 'Pending Transfers',
+    value: '—',
+    icon: '🔄',
+    variant: 'warning',
+  },
+  {
+    id: 'overdue-returns',
+    label: 'Overdue Returns',
+    value: '—',
+    icon: '⚠️',
+    variant: 'danger',
+  },
 ];
 
 const ROLE_GREETING: Record<string, string> = {
@@ -64,7 +81,13 @@ export function DashboardPage() {
         title={greeting}
         subtitle={subtitle}
         actions={
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--sp-2)',
+            }}
+          >
             {backendOk === null ? (
               <Spinner size="sm" label="Checking backend" />
             ) : (
@@ -117,10 +140,7 @@ export function DashboardPage() {
       </section>
 
       {/* Quick actions placeholder */}
-      <section
-        aria-label="Quick actions"
-        style={{ marginTop: 'var(--sp-8)' }}
-      >
+      <section aria-label="Quick actions" style={{ marginTop: 'var(--sp-8)' }}>
         <h2
           style={{
             fontSize: 'var(--text-sm)',
@@ -137,7 +157,11 @@ export function DashboardPage() {
           {[
             { label: 'Register Asset', icon: '＋', id: 'quick-register-asset' },
             { label: 'Book Resource', icon: '📅', id: 'quick-book-resource' },
-            { label: 'Raise Maintenance', icon: '🔧', id: 'quick-raise-maintenance' },
+            {
+              label: 'Raise Maintenance',
+              icon: '🔧',
+              id: 'quick-raise-maintenance',
+            },
           ].map((action) => (
             <button
               key={action.id}
@@ -158,7 +182,8 @@ export function DashboardPage() {
             color: 'var(--text-muted)',
           }}
         >
-          Quick actions will be enabled as each module is implemented (Phases 5–9).
+          Quick actions will be enabled as each module is implemented (Phases
+          5–9).
         </p>
       </section>
     </>
