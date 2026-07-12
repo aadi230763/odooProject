@@ -436,10 +436,12 @@ def seed() -> None:
         db.session.add(audit)
         db.session.flush()
 
-        db.session.add(AuditAssignment(
-            audit_cycle_id=audit.id,
-            auditor_employee_id=dept_head.id,
-        ))
+        db.session.add(
+            AuditAssignment(
+                audit_cycle_id=audit.id,
+                auditor_employee_id=dept_head.id,
+            )
+        )
         db.session.flush()
 
         audit_item1 = AuditItem(
@@ -474,21 +476,34 @@ def seed() -> None:
         db.session.add(audit2)
         db.session.flush()
 
-        db.session.add_all([
-            AuditAssignment(audit_cycle_id=audit2.id, auditor_employee_id=emp2.id),
-            AuditAssignment(audit_cycle_id=audit2.id, auditor_employee_id=emp3.id),
-        ])
+        db.session.add_all(
+            [
+                AuditAssignment(audit_cycle_id=audit2.id, auditor_employee_id=emp2.id),
+                AuditAssignment(audit_cycle_id=audit2.id, auditor_employee_id=emp3.id),
+            ]
+        )
         db.session.flush()
 
-        db.session.add_all([
-            AuditItem(audit_cycle_id=audit2.id, asset_id=laptop2.id,
-                      result=AuditItemResult.verified),
-            AuditItem(audit_cycle_id=audit2.id, asset_id=desk1.id,
-                      result=AuditItemResult.damaged,
-                      notes="Wobble in standing mechanism; needs repair."),
-            AuditItem(audit_cycle_id=audit2.id, asset_id=van1.id,
-                      result=AuditItemResult.pending),
-        ])
+        db.session.add_all(
+            [
+                AuditItem(
+                    audit_cycle_id=audit2.id,
+                    asset_id=laptop2.id,
+                    result=AuditItemResult.verified,
+                ),
+                AuditItem(
+                    audit_cycle_id=audit2.id,
+                    asset_id=desk1.id,
+                    result=AuditItemResult.damaged,
+                    notes="Wobble in standing mechanism; needs repair.",
+                ),
+                AuditItem(
+                    audit_cycle_id=audit2.id,
+                    asset_id=van1.id,
+                    result=AuditItemResult.pending,
+                ),
+            ]
+        )
         db.session.flush()
 
         # Cycle 3 — Open, no auditors yet, all assets pending (fresh cycle)
@@ -502,7 +517,8 @@ def seed() -> None:
         db.session.add(audit3)
         db.session.flush()
 
-        # No scope = no auto-items at seed time (scope filtering picks them up at runtime)
+        # No scope = no auto-items at seed time
+        # (scope filtering picks them up at runtime)
         db.session.flush()
 
         # -----------------------------------------------------------------

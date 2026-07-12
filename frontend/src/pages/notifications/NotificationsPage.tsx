@@ -64,18 +64,23 @@ export function NotificationsPage() {
     }
   }, [unreadOnly, toast]);
 
-  useEffect(() => { loadNotifications(); }, [loadNotifications]);
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
 
   const handleMarkRead = async (n: AppNotification) => {
     if (n.is_read) return;
     try {
       await notificationsApi.markRead(n.id);
-      setNotifications(prev =>
-        prev.map(x => x.id === n.id ? { ...x, is_read: true } : x)
+      setNotifications((prev) =>
+        prev.map((x) => (x.id === n.id ? { ...x, is_read: true } : x)),
       );
-      setUnreadCount(prev => Math.max(0, prev - 1));
+      setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (err) {
-      toast.error('Failed to mark as read.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Failed to mark as read.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     }
   };
 
@@ -83,7 +88,7 @@ export function NotificationsPage() {
     setMarkingAll(true);
     try {
       await notificationsApi.markAllRead();
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
       setUnreadCount(0);
       toast.success('All notifications marked as read.');
     } catch {
@@ -115,19 +120,30 @@ export function NotificationsPage() {
         title="Notifications"
         subtitle="Stay up to date on asset activity, approvals, and reminders."
         actions={
-          <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--sp-2)',
+              alignItems: 'center',
+            }}
+          >
             {unreadCount > 0 && (
               <Badge variant="danger">{unreadCount} unread</Badge>
             )}
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setUnreadOnly(v => !v)}
+              onClick={() => setUnreadOnly((v) => !v)}
             >
               {unreadOnly ? 'Show All' : 'Unread Only'}
             </Button>
             {unreadCount > 0 && (
-              <Button variant="secondary" size="sm" loading={markingAll} onClick={handleMarkAll}>
+              <Button
+                variant="secondary"
+                size="sm"
+                loading={markingAll}
+                onClick={handleMarkAll}
+              >
                 Mark All Read
               </Button>
             )}
@@ -136,12 +152,27 @@ export function NotificationsPage() {
       />
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--sp-10)' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: 'var(--sp-10)',
+          }}
+        >
           <Spinner size="md" label="Loading notifications…" />
         </div>
       ) : notifications.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: 'var(--sp-10)', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: '2.5rem', marginBottom: 'var(--sp-3)' }}>🔔</div>
+        <div
+          className="card"
+          style={{
+            textAlign: 'center',
+            padding: 'var(--sp-10)',
+            color: 'var(--text-muted)',
+          }}
+        >
+          <div style={{ fontSize: '2.5rem', marginBottom: 'var(--sp-3)' }}>
+            🔔
+          </div>
           <p style={{ fontSize: 'var(--text-sm)' }}>
             {unreadOnly ? 'No unread notifications.' : 'No notifications yet.'}
           </p>
@@ -158,53 +189,87 @@ export function NotificationsPage() {
                   display: 'flex',
                   gap: 'var(--sp-4)',
                   padding: 'var(--sp-4) var(--sp-5)',
-                  borderBottom: idx < notifications.length - 1 ? '1px solid var(--border)' : undefined,
-                  background: n.is_read ? 'transparent' : 'rgba(59,130,246,0.04)',
+                  borderBottom:
+                    idx < notifications.length - 1
+                      ? '1px solid var(--border)'
+                      : undefined,
+                  background: n.is_read
+                    ? 'transparent'
+                    : 'rgba(59,130,246,0.04)',
                   cursor: 'pointer',
                   transition: 'background 150ms',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-surface-2)')}
-                onMouseLeave={e => (e.currentTarget.style.background = n.is_read ? 'transparent' : 'rgba(59,130,246,0.04)')}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = 'var(--bg-surface-2)')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = n.is_read
+                    ? 'transparent'
+                    : 'rgba(59,130,246,0.04)')
+                }
               >
                 {/* Unread dot */}
                 <div style={{ paddingTop: 'var(--sp-1)', flexShrink: 0 }}>
-                  <div style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    background: n.is_read ? 'transparent' : 'var(--primary)',
-                    marginTop: '4px',
-                  }} />
+                  <div
+                    style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: n.is_read ? 'transparent' : 'var(--primary)',
+                      marginTop: '4px',
+                    }}
+                  />
                 </div>
 
                 {/* Icon */}
-                <div style={{ fontSize: '1.25rem', flexShrink: 0, lineHeight: 1 }}>
+                <div
+                  style={{ fontSize: '1.25rem', flexShrink: 0, lineHeight: 1 }}
+                >
                   {meta.icon}
                 </div>
 
                 {/* Body */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 'var(--sp-3)' }}>
-                    <span style={{
-                      fontSize: 'var(--text-xs)',
-                      fontWeight: 'var(--fw-semibold)',
-                      color: 'var(--text-muted)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.06em',
-                    }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'baseline',
+                      gap: 'var(--sp-3)',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 'var(--text-xs)',
+                        fontWeight: 'var(--fw-semibold)',
+                        color: 'var(--text-muted)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
+                      }}
+                    >
                       {meta.label}
                     </span>
-                    <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', flexShrink: 0 }}>
+                    <span
+                      style={{
+                        fontSize: 'var(--text-xs)',
+                        color: 'var(--text-muted)',
+                        flexShrink: 0,
+                      }}
+                    >
                       {fmtTime(n.created_at)}
                     </span>
                   </div>
-                  <p style={{
-                    fontSize: 'var(--text-sm)',
-                    color: n.is_read ? 'var(--text-secondary)' : 'var(--text-primary)',
-                    fontWeight: n.is_read ? undefined : 'var(--fw-medium)',
-                    marginTop: 'var(--sp-1)',
-                    lineHeight: 1.5,
-                  }}>
+                  <p
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      color: n.is_read
+                        ? 'var(--text-secondary)'
+                        : 'var(--text-primary)',
+                      fontWeight: n.is_read ? undefined : 'var(--fw-medium)',
+                      marginTop: 'var(--sp-1)',
+                      lineHeight: 1.5,
+                    }}
+                  >
                     {n.message}
                   </p>
                 </div>

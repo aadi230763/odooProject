@@ -50,38 +50,64 @@ export const maintenanceApi = {
     if (params?.raised_by) qs.set('raised_by', String(params.raised_by));
     if (params?.priority) qs.set('priority', params.priority);
     const query = qs.toString() ? `?${qs.toString()}` : '';
-    return api.get<{ maintenance_requests: MaintenanceRequest[] }>(`/maintenance${query}`);
+    return api.get<{ maintenance_requests: MaintenanceRequest[] }>(
+      `/maintenance${query}`,
+    );
   },
 
   get: (id: number) =>
     api.get<{ maintenance_request: MaintenanceRequest }>(`/maintenance/${id}`),
 
-  raise: (payload: { asset_id: number; description: string; priority?: string }, photo?: File) => {
+  raise: (
+    payload: { asset_id: number; description: string; priority?: string },
+    photo?: File,
+  ) => {
     if (photo) {
       const form = new FormData();
       form.append('asset_id', String(payload.asset_id));
       form.append('description', payload.description);
       form.append('priority', payload.priority ?? 'medium');
       form.append('photo', photo);
-      return api.postForm<{ maintenance_request: MaintenanceRequest }>('/maintenance', form);
+      return api.postForm<{ maintenance_request: MaintenanceRequest }>(
+        '/maintenance',
+        form,
+      );
     }
-    return api.post<{ maintenance_request: MaintenanceRequest }>('/maintenance', payload);
+    return api.post<{ maintenance_request: MaintenanceRequest }>(
+      '/maintenance',
+      payload,
+    );
   },
 
   approve: (id: number, notes?: string) =>
-    api.patch<{ maintenance_request: MaintenanceRequest }>(`/maintenance/${id}/approve`, { notes }),
+    api.patch<{ maintenance_request: MaintenanceRequest }>(
+      `/maintenance/${id}/approve`,
+      { notes },
+    ),
 
   reject: (id: number, notes?: string) =>
-    api.patch<{ maintenance_request: MaintenanceRequest }>(`/maintenance/${id}/reject`, { notes }),
+    api.patch<{ maintenance_request: MaintenanceRequest }>(
+      `/maintenance/${id}/reject`,
+      { notes },
+    ),
 
   assignTechnician: (id: number, technician_id: number) =>
-    api.patch<{ maintenance_request: MaintenanceRequest }>(`/maintenance/${id}/assign-technician`, {
-      technician_id,
-    }),
+    api.patch<{ maintenance_request: MaintenanceRequest }>(
+      `/maintenance/${id}/assign-technician`,
+      {
+        technician_id,
+      },
+    ),
 
   startProgress: (id: number) =>
-    api.patch<{ maintenance_request: MaintenanceRequest }>(`/maintenance/${id}/start`, {}),
+    api.patch<{ maintenance_request: MaintenanceRequest }>(
+      `/maintenance/${id}/start`,
+      {},
+    ),
 
   resolve: (id: number, notes?: string) =>
-    api.patch<{ maintenance_request: MaintenanceRequest }>(`/maintenance/${id}/resolve`, { notes }),
+    api.patch<{ maintenance_request: MaintenanceRequest }>(
+      `/maintenance/${id}/resolve`,
+      { notes },
+    ),
 };

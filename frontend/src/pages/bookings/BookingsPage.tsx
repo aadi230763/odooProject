@@ -7,11 +7,23 @@ import {
 } from '../../api/bookings';
 import { assetsApi, type Asset } from '../../api/assets';
 import { ApiError } from '../../api/client';
-import { Badge, Button, Input, Select, Spinner, Table, PageHeader, Modal } from '../../components/ui';
+import {
+  Badge,
+  Button,
+  Input,
+  Select,
+  Spinner,
+  Table,
+  PageHeader,
+  Modal,
+} from '../../components/ui';
 import { useToast } from '../../hooks/useToast';
 import { useAuth } from '../../context/AuthContext';
 
-const STATUS_BADGE: Record<BookingStatus, 'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'> = {
+const STATUS_BADGE: Record<
+  BookingStatus,
+  'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'
+> = {
   upcoming: 'info',
   ongoing: 'primary',
   completed: 'success',
@@ -53,7 +65,9 @@ export function BookingsPage() {
 
   // ── Reschedule Modal ───────────────────────────────────────
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
-  const [rescheduleBooking, setRescheduleBooking] = useState<Booking | null>(null);
+  const [rescheduleBooking, setRescheduleBooking] = useState<Booking | null>(
+    null,
+  );
   const [rescheduleForm, setRescheduleForm] = useState({
     date: '',
     start_time: '',
@@ -82,7 +96,9 @@ export function BookingsPage() {
     }
   }, [statusFilter, toast]);
 
-  useEffect(() => { loadBookings(); }, [loadBookings]);
+  useEffect(() => {
+    loadBookings();
+  }, [loadBookings]);
 
   const loadCalendar = useCallback(async () => {
     if (!calendarAssetId) {
@@ -100,15 +116,22 @@ export function BookingsPage() {
     }
   }, [calendarAssetId, toast]);
 
-  useEffect(() => { loadCalendar(); }, [loadCalendar]);
+  useEffect(() => {
+    loadCalendar();
+  }, [loadCalendar]);
 
   // ── Actions ────────────────────────────────────────────────
 
   const openCreateModal = async () => {
     try {
       const res = await assetsApi.list();
-      setBookableAssets(res.assets.filter(a => a.is_bookable));
-      setCreateForm({ resource_asset_id: '', date: '', start_time: '', end_time: '' });
+      setBookableAssets(res.assets.filter((a) => a.is_bookable));
+      setCreateForm({
+        resource_asset_id: '',
+        date: '',
+        start_time: '',
+        end_time: '',
+      });
       setShowCreateModal(true);
     } catch {
       toast.error('Failed to load bookable assets.');
@@ -133,7 +156,10 @@ export function BookingsPage() {
       loadBookings();
       loadCalendar();
     } catch (err) {
-      toast.error('Booking failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Booking failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setCreateSaving(false);
     }
@@ -146,7 +172,10 @@ export function BookingsPage() {
       loadBookings();
       loadCalendar();
     } catch (err) {
-      toast.error('Cancel failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Cancel failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     }
   };
 
@@ -181,7 +210,10 @@ export function BookingsPage() {
       loadBookings();
       loadCalendar();
     } catch (err) {
-      toast.error('Reschedule failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Reschedule failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setRescheduleSaving(false);
     }
@@ -203,42 +235,75 @@ export function BookingsPage() {
 
       {/* Calendar Strip */}
       <div className="card" style={{ marginBottom: 'var(--sp-6)' }}>
-        <h3 style={{ fontSize: 'var(--text-sm)', fontWeight: 'var(--fw-semibold)', color: 'var(--text-muted)', marginBottom: 'var(--sp-3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <h3
+          style={{
+            fontSize: 'var(--text-sm)',
+            fontWeight: 'var(--fw-semibold)',
+            color: 'var(--text-muted)',
+            marginBottom: 'var(--sp-3)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+          }}
+        >
           Resource Calendar
         </h3>
-        <div style={{ display: 'flex', gap: 'var(--sp-3)', alignItems: 'end', marginBottom: 'var(--sp-4)' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 'var(--sp-3)',
+            alignItems: 'end',
+            marginBottom: 'var(--sp-4)',
+          }}
+        >
           <Select
             id="cal-asset"
             label="Select Resource"
             value={calendarAssetId}
-            onChange={e => setCalendarAssetId(e.target.value)}
+            onChange={(e) => setCalendarAssetId(e.target.value)}
             options={[
               { value: '', label: 'Choose a resource...' },
-              ...bookableAssets.map(a => ({ value: String(a.id), label: `${a.asset_tag} — ${a.name}` })),
+              ...bookableAssets.map((a) => ({
+                value: String(a.id),
+                label: `${a.asset_tag} — ${a.name}`,
+              })),
             ]}
           />
           {!bookableAssets.length && (
-            <Button variant="ghost" size="sm" onClick={async () => {
-              try {
-                const res = await assetsApi.list();
-                setBookableAssets(res.assets.filter(a => a.is_bookable));
-              } catch { /* ignore */ }
-            }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={async () => {
+                try {
+                  const res = await assetsApi.list();
+                  setBookableAssets(res.assets.filter((a) => a.is_bookable));
+                } catch {
+                  /* ignore */
+                }
+              }}
+            >
               Load Resources
             </Button>
           )}
         </div>
 
-        {calendarAssetId && (
-          calendarLoading ? (
+        {calendarAssetId &&
+          (calendarLoading ? (
             <Spinner size="sm" label="Loading calendar" />
           ) : calendarBookings.length === 0 ? (
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
+            <p
+              style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}
+            >
               No bookings for this resource.
             </p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
-              {calendarBookings.map(b => (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--sp-2)',
+              }}
+            >
+              {calendarBookings.map((b) => (
                 <div
                   key={b.id}
                   style={{
@@ -252,10 +317,20 @@ export function BookingsPage() {
                   }}
                 >
                   <div>
-                    <span style={{ fontWeight: 'var(--fw-medium)', color: 'var(--text-primary)' }}>
+                    <span
+                      style={{
+                        fontWeight: 'var(--fw-medium)',
+                        color: 'var(--text-primary)',
+                      }}
+                    >
                       {formatSlot(b.start_time)} → {formatSlot(b.end_time)}
                     </span>
-                    <span style={{ color: 'var(--text-muted)', marginLeft: 'var(--sp-2)' }}>
+                    <span
+                      style={{
+                        color: 'var(--text-muted)',
+                        marginLeft: 'var(--sp-2)',
+                      }}
+                    >
                       by {b.booked_by_name}
                     </span>
                   </div>
@@ -263,17 +338,23 @@ export function BookingsPage() {
                 </div>
               ))}
             </div>
-          )
-        )}
+          ))}
       </div>
 
       {/* Bookings Table */}
-      <div style={{ display: 'flex', gap: 'var(--sp-3)', marginBottom: 'var(--sp-4)', maxWidth: '250px' }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 'var(--sp-3)',
+          marginBottom: 'var(--sp-4)',
+          maxWidth: '250px',
+        }}
+      >
         <Select
           id="booking-status-filter"
           label="Filter by Status"
           value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)}
+          onChange={(e) => setStatusFilter(e.target.value)}
           options={[
             { value: '', label: 'All' },
             { value: 'upcoming', label: 'Upcoming' },
@@ -284,19 +365,31 @@ export function BookingsPage() {
         />
       </div>
 
-      <div style={{ marginBottom: 'var(--sp-3)', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-        {loading ? <Spinner size="xs" label="Loading" /> : `${bookings.length} booking${bookings.length !== 1 ? 's' : ''}`}
+      <div
+        style={{
+          marginBottom: 'var(--sp-3)',
+          fontSize: 'var(--text-xs)',
+          color: 'var(--text-muted)',
+        }}
+      >
+        {loading ? (
+          <Spinner size="xs" label="Loading" />
+        ) : (
+          `${bookings.length} booking${bookings.length !== 1 ? 's' : ''}`
+        )}
       </div>
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         <Table
           loading={loading}
-          keyExtractor={b => String(b.id)}
+          keyExtractor={(b) => String(b.id)}
           data={bookings}
           empty="No bookings found."
           columns={[
             {
-              key: 'asset', header: 'Resource', render: b => (
+              key: 'asset',
+              header: 'Resource',
+              render: (b) => (
                 <div>
                   <strong
                     style={{ color: 'var(--primary)', cursor: 'pointer' }}
@@ -304,40 +397,66 @@ export function BookingsPage() {
                   >
                     {b.asset_tag}
                   </strong>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>{b.asset_name}</div>
+                  <div
+                    style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    {b.asset_name}
+                  </div>
                 </div>
               ),
             },
             {
-              key: 'slot', header: 'Time Slot',
-              render: b => (
+              key: 'slot',
+              header: 'Time Slot',
+              render: (b) => (
                 <div style={{ fontSize: 'var(--text-sm)' }}>
                   <div>{formatSlot(b.start_time)}</div>
-                  <div style={{ color: 'var(--text-muted)' }}>→ {formatSlot(b.end_time)}</div>
+                  <div style={{ color: 'var(--text-muted)' }}>
+                    → {formatSlot(b.end_time)}
+                  </div>
                 </div>
               ),
             },
             {
-              key: 'bookedBy', header: 'Booked By',
-              render: b => <span>{b.booked_by_name || '—'}</span>,
+              key: 'bookedBy',
+              header: 'Booked By',
+              render: (b) => <span>{b.booked_by_name || '—'}</span>,
             },
             {
-              key: 'status', header: 'Status',
-              render: b => <Badge variant={STATUS_BADGE[b.status]}>{b.status}</Badge>,
+              key: 'status',
+              header: 'Status',
+              render: (b) => (
+                <Badge variant={STATUS_BADGE[b.status]}>{b.status}</Badge>
+              ),
             },
             {
-              key: 'actions', header: '', width: '180px',
+              key: 'actions',
+              header: '',
+              width: '180px',
               render: (b: Booking) => {
-                if (b.status === 'completed' || b.status === 'cancelled') return null;
+                if (b.status === 'completed' || b.status === 'cancelled')
+                  return null;
                 const isOwner = String(b.booked_by) === String(user?.id);
-                const isManager = user?.role === 'admin' || user?.role === 'asset_manager';
+                const isManager =
+                  user?.role === 'admin' || user?.role === 'asset_manager';
                 if (!isOwner && !isManager) return null;
                 return (
                   <div style={{ display: 'flex', gap: 'var(--sp-2)' }}>
-                    <Button variant="ghost" size="sm" onClick={() => openReschedule(b)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => openReschedule(b)}
+                    >
                       Reschedule
                     </Button>
-                    <Button variant="danger" size="sm" onClick={() => handleCancel(b.id)}>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleCancel(b.id)}
+                    >
                       Cancel
                     </Button>
                   </div>
@@ -355,21 +474,46 @@ export function BookingsPage() {
         title="New Booking"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setShowCreateModal(false)}>Cancel</Button>
-            <Button variant="primary" loading={createSaving} onClick={handleCreate}>Book</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setShowCreateModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              loading={createSaving}
+              onClick={handleCreate}
+            >
+              Book
+            </Button>
           </>
         }
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--sp-4)',
+          }}
+        >
           <Select
             id="book-asset"
             label="Resource"
             required
             value={createForm.resource_asset_id}
-            onChange={e => setCreateForm({ ...createForm, resource_asset_id: e.target.value })}
+            onChange={(e) =>
+              setCreateForm({
+                ...createForm,
+                resource_asset_id: e.target.value,
+              })
+            }
             options={[
               { value: '', label: 'Select a bookable resource...' },
-              ...bookableAssets.map(a => ({ value: String(a.id), label: `${a.asset_tag} — ${a.name}` })),
+              ...bookableAssets.map((a) => ({
+                value: String(a.id),
+                label: `${a.asset_tag} — ${a.name}`,
+              })),
             ]}
           />
           <Input
@@ -378,16 +522,26 @@ export function BookingsPage() {
             type="date"
             required
             value={createForm.date}
-            onChange={e => setCreateForm({ ...createForm, date: e.target.value })}
+            onChange={(e) =>
+              setCreateForm({ ...createForm, date: e.target.value })
+            }
           />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-3)' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 'var(--sp-3)',
+            }}
+          >
             <Input
               id="book-start"
               label="Start Time"
               type="time"
               required
               value={createForm.start_time}
-              onChange={e => setCreateForm({ ...createForm, start_time: e.target.value })}
+              onChange={(e) =>
+                setCreateForm({ ...createForm, start_time: e.target.value })
+              }
             />
             <Input
               id="book-end"
@@ -395,7 +549,9 @@ export function BookingsPage() {
               type="time"
               required
               value={createForm.end_time}
-              onChange={e => setCreateForm({ ...createForm, end_time: e.target.value })}
+              onChange={(e) =>
+                setCreateForm({ ...createForm, end_time: e.target.value })
+              }
             />
           </div>
         </div>
@@ -408,15 +564,39 @@ export function BookingsPage() {
         title="Reschedule Booking"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setShowRescheduleModal(false)}>Cancel</Button>
-            <Button variant="primary" loading={rescheduleSaving} onClick={handleReschedule}>Reschedule</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setShowRescheduleModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              loading={rescheduleSaving}
+              onClick={handleReschedule}
+            >
+              Reschedule
+            </Button>
           </>
         }
       >
         {rescheduleBooking && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-              Rescheduling booking for <strong>{rescheduleBooking.asset_tag}</strong> ({rescheduleBooking.asset_name}).
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--sp-4)',
+            }}
+          >
+            <p
+              style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-secondary)',
+              }}
+            >
+              Rescheduling booking for{' '}
+              <strong>{rescheduleBooking.asset_tag}</strong> (
+              {rescheduleBooking.asset_name}).
             </p>
             <Input
               id="resched-date"
@@ -424,16 +604,29 @@ export function BookingsPage() {
               type="date"
               required
               value={rescheduleForm.date}
-              onChange={e => setRescheduleForm({ ...rescheduleForm, date: e.target.value })}
+              onChange={(e) =>
+                setRescheduleForm({ ...rescheduleForm, date: e.target.value })
+              }
             />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-3)' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 'var(--sp-3)',
+              }}
+            >
               <Input
                 id="resched-start"
                 label="Start Time"
                 type="time"
                 required
                 value={rescheduleForm.start_time}
-                onChange={e => setRescheduleForm({ ...rescheduleForm, start_time: e.target.value })}
+                onChange={(e) =>
+                  setRescheduleForm({
+                    ...rescheduleForm,
+                    start_time: e.target.value,
+                  })
+                }
               />
               <Input
                 id="resched-end"
@@ -441,7 +634,12 @@ export function BookingsPage() {
                 type="time"
                 required
                 value={rescheduleForm.end_time}
-                onChange={e => setRescheduleForm({ ...rescheduleForm, end_time: e.target.value })}
+                onChange={(e) =>
+                  setRescheduleForm({
+                    ...rescheduleForm,
+                    end_time: e.target.value,
+                  })
+                }
               />
             </div>
           </div>

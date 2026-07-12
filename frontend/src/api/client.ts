@@ -120,7 +120,11 @@ async function requestForm<T>(
   try {
     response = await fetch(`/api${path}`, { method, headers, body });
   } catch {
-    throw new ApiError('Network error — backend unreachable.', 'NETWORK_ERROR', 0);
+    throw new ApiError(
+      'Network error — backend unreachable.',
+      'NETWORK_ERROR',
+      0,
+    );
   }
 
   let envelope: ApiEnvelope<T>;
@@ -152,7 +156,8 @@ async function requestForm<T>(
 export const api = {
   get: <T>(path: string) => request<T>('GET', path),
   post: <T>(path: string, body?: unknown) => request<T>('POST', path, body),
-  postForm: <T>(path: string, body: FormData) => requestForm<T>('POST', path, body),
+  postForm: <T>(path: string, body: FormData) =>
+    requestForm<T>('POST', path, body),
   put: <T>(path: string, body?: unknown) => request<T>('PUT', path, body),
   patch: <T>(path: string, body?: unknown) => request<T>('PATCH', path, body),
   delete: <T>(path: string, body?: unknown) => request<T>('DELETE', path, body),

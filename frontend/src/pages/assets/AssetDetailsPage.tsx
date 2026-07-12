@@ -6,7 +6,11 @@ import {
   type AssetStatus,
   type AssetDocument,
 } from '../../api/assets';
-import { maintenanceApi, type MaintenanceRequest, type MaintenanceStatus } from '../../api/maintenance';
+import {
+  maintenanceApi,
+  type MaintenanceRequest,
+  type MaintenanceStatus,
+} from '../../api/maintenance';
 import { ApiError } from '../../api/client';
 import { Badge, Button, Select, Spinner, Modal } from '../../components/ui';
 import { useToast } from '../../hooks/useToast';
@@ -46,7 +50,9 @@ export function AssetDetailsPage() {
   const [documents, setDocuments] = useState<AssetDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [maintenanceHistory, setMaintenanceHistory] = useState<MaintenanceRequest[]>([]);
+  const [maintenanceHistory, setMaintenanceHistory] = useState<
+    MaintenanceRequest[]
+  >([]);
 
   const [statusModal, setStatusModal] = useState(false);
   const [newStatus, setNewStatus] = useState<AssetStatus>('available');
@@ -347,12 +353,23 @@ export function AssetDetailsPage() {
               Maintenance History
             </h3>
             {maintenanceHistory.length === 0 ? (
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--text-muted)',
+                }}
+              >
                 No maintenance records.
               </p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
-                {maintenanceHistory.map(m => (
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'var(--sp-3)',
+                }}
+              >
+                {maintenanceHistory.map((m) => (
                   <div
                     key={m.id}
                     style={{
@@ -362,14 +379,31 @@ export function AssetDetailsPage() {
                       fontSize: 'var(--text-sm)',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--sp-1)' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: 'var(--sp-1)',
+                      }}
+                    >
                       <span style={{ fontWeight: 'var(--fw-medium)' }}>
-                        {m.description.length > 80 ? m.description.slice(0, 80) + '…' : m.description}
+                        {m.description.length > 80
+                          ? m.description.slice(0, 80) + '…'
+                          : m.description}
                       </span>
                       <MaintenanceStatusBadge status={m.status} />
                     </div>
-                    <div style={{ display: 'flex', gap: 'var(--sp-4)', color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>
-                      <span>Priority: <strong>{m.priority}</strong></span>
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: 'var(--sp-4)',
+                        color: 'var(--text-muted)',
+                        fontSize: 'var(--text-xs)',
+                      }}
+                    >
+                      <span>
+                        Priority: <strong>{m.priority}</strong>
+                      </span>
                       <span>Raised by: {m.raised_by_name}</span>
                       <span>{new Date(m.created_at).toLocaleDateString()}</span>
                     </div>
@@ -461,7 +495,10 @@ export function AssetDetailsPage() {
 }
 
 function MaintenanceStatusBadge({ status }: { status: MaintenanceStatus }) {
-  const variantMap: Record<MaintenanceStatus, 'muted' | 'primary' | 'danger' | 'warning' | 'info' | 'success'> = {
+  const variantMap: Record<
+    MaintenanceStatus,
+    'muted' | 'primary' | 'danger' | 'warning' | 'info' | 'success'
+  > = {
     pending: 'warning',
     approved: 'info',
     rejected: 'danger',

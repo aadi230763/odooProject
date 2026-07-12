@@ -2,7 +2,8 @@
 
 Workflow
 --------
-  1. Admin/Asset Manager creates an audit cycle (scope = dept and/or location + date range).
+  1. Admin/Asset Manager creates an audit cycle
+     (scope = dept and/or location + date range).
      In-scope assets are auto-populated as AuditItems with result=pending.
   2. Admin/Asset Manager assigns one or more auditors to the cycle.
   3. Assigned auditors mark each asset: verified | missing | damaged.

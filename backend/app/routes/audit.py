@@ -5,7 +5,8 @@ Endpoints
   GET    /api/audits                              — list cycles
   POST   /api/audits                              — create cycle (admin/asset_manager)
   GET    /api/audits/<id>                         — get cycle detail
-  PATCH  /api/audits/<id>/assign-auditors         — assign auditors (admin/asset_manager)
+  PATCH  /api/audits/<id>/assign-auditors         — assign auditors
+                                                    (admin/asset_manager)
   PATCH  /api/audits/<id>/close                   — close cycle (admin/asset_manager)
   GET    /api/audits/<id>/items                   — list audit items
   PATCH  /api/audits/<id>/items/<item_id>         — mark item result (assigned auditors)

@@ -210,7 +210,10 @@ def approve_request(
     _notify(
         recipient_id=req.raised_by,
         type_="maintenance_approved",
-        message=f"Your maintenance request for {asset.asset_tag} ({asset.name}) has been approved.",
+        message=(
+            f"Your maintenance request for {asset.asset_tag} "
+            f"({asset.name}) has been approved."
+        ),
         entity_id=req.id,
     )
     db.session.commit()
@@ -243,7 +246,9 @@ def reject_request(
     _notify(
         recipient_id=req.raised_by,
         type_="maintenance_rejected",
-        message=f"Your maintenance request for {req.asset.asset_tag} has been rejected.",
+        message=(
+            f"Your maintenance request for {req.asset.asset_tag} " "has been rejected."
+        ),
         entity_id=req.id,
     )
     db.session.commit()
@@ -262,7 +267,8 @@ def assign_technician(
     req = get_request(request_id)
     if req.status != MaintenanceStatus.approved:
         raise ValueError(
-            f"INVALID_STATUS: Can only assign a technician on an approved request (current: {req.status.value})."
+            "INVALID_STATUS: Can only assign a technician on an approved request "
+            f"(current: {req.status.value})."
         )
 
     tech = db.session.get(Employee, validated["technician_id"])
@@ -289,7 +295,8 @@ def start_progress(request_id: int, actor_id: int) -> MaintenanceRequest:
     req = get_request(request_id)
     if req.status != MaintenanceStatus.technician_assigned:
         raise ValueError(
-            f"INVALID_STATUS: Request must be in 'technician_assigned' state (current: {req.status.value})."
+            "INVALID_STATUS: Request must be in 'technician_assigned' state "
+            f"(current: {req.status.value})."
         )
 
     req.status = MaintenanceStatus.in_progress
@@ -317,7 +324,8 @@ def resolve_request(
     req = get_request(request_id)
     if req.status != MaintenanceStatus.in_progress:
         raise ValueError(
-            f"INVALID_STATUS: Can only resolve an in-progress request (current: {req.status.value})."
+            "INVALID_STATUS: Can only resolve an in-progress request "
+            f"(current: {req.status.value})."
         )
 
     req.status = MaintenanceStatus.resolved
@@ -333,7 +341,10 @@ def resolve_request(
     _notify(
         recipient_id=req.raised_by,
         type_="maintenance_resolved",
-        message=f"Maintenance for {req.asset.asset_tag} ({req.asset.name}) has been resolved.",
+        message=(
+            f"Maintenance for {req.asset.asset_tag} ({req.asset.name}) "
+            "has been resolved."
+        ),
         entity_id=req.id,
     )
     db.session.commit()

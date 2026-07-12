@@ -113,16 +113,10 @@ export function AppRouter() {
             <Route path="allocations" element={<AllocationsPage />} />
 
             {/* Booking (Phase 7) */}
-            <Route
-              path="bookings"
-              element={<BookingsPage />}
-            />
+            <Route path="bookings" element={<BookingsPage />} />
 
             {/* Maintenance (Phase 8) */}
-            <Route
-              path="maintenance"
-              element={<MaintenancePage />}
-            />
+            <Route path="maintenance" element={<MaintenancePage />} />
 
             {/* Audits (Phase 9) */}
             <Route path="audits" element={<AuditCyclesPage />} />

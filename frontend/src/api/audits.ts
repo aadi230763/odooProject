@@ -55,8 +55,7 @@ export const auditsApi = {
     return api.get<{ audit_cycles: AuditCycle[] }>(`/audits${query}`);
   },
 
-  get: (id: number) =>
-    api.get<{ audit_cycle: AuditCycle }>(`/audits/${id}`),
+  get: (id: number) => api.get<{ audit_cycle: AuditCycle }>(`/audits/${id}`),
 
   create: (payload: {
     name: string;
@@ -67,7 +66,9 @@ export const auditsApi = {
   }) => api.post<{ audit_cycle: AuditCycle }>('/audits', payload),
 
   assignAuditors: (id: number, auditor_ids: number[]) =>
-    api.patch<{ audit_cycle: AuditCycle }>(`/audits/${id}/assign-auditors`, { auditor_ids }),
+    api.patch<{ audit_cycle: AuditCycle }>(`/audits/${id}/assign-auditors`, {
+      auditor_ids,
+    }),
 
   close: (id: number) =>
     api.patch<{ audit_cycle: AuditCycle }>(`/audits/${id}/close`, {}),
@@ -75,7 +76,12 @@ export const auditsApi = {
   listItems: (id: number) =>
     api.get<{ audit_items: AuditItem[] }>(`/audits/${id}/items`),
 
-  markItem: (cycleId: number, itemId: number, result: AuditItemResult, notes?: string) =>
+  markItem: (
+    cycleId: number,
+    itemId: number,
+    result: AuditItemResult,
+    notes?: string,
+  ) =>
     api.patch<{ audit_item: AuditItem }>(`/audits/${cycleId}/items/${itemId}`, {
       result,
       notes: notes ?? null,

@@ -73,10 +73,12 @@ export const notificationsApi = {
   },
 
   markRead: (id: number) =>
-    api.patch<{ notification: AppNotification }>(`/notifications/${id}/read`, {}),
+    api.patch<{ notification: AppNotification }>(
+      `/notifications/${id}/read`,
+      {},
+    ),
 
-  markAllRead: () =>
-    api.post<{ marked: number }>('/notifications/read-all'),
+  markAllRead: () => api.post<{ marked: number }>('/notifications/read-all'),
 
   unreadCount: () =>
     api.get<{ unread_count: number }>('/notifications/unread-count'),

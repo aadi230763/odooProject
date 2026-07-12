@@ -29,12 +29,19 @@ export function Topbar() {
     const fetch = () =>
       notificationsApi
         .unreadCount()
-        .then(r => { if (mounted) setUnread(r.unread_count); })
-        .catch(() => { /* silent */ });
+        .then((r) => {
+          if (mounted) setUnread(r.unread_count);
+        })
+        .catch(() => {
+          /* silent */
+        });
 
     fetch();
     const timer = setInterval(fetch, 60_000);
-    return () => { mounted = false; clearInterval(timer); };
+    return () => {
+      mounted = false;
+      clearInterval(timer);
+    };
   }, []);
 
   // Reset badge when user visits the notifications page

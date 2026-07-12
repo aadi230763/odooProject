@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { dashboardApi, type DashboardKpis, type OverdueAllocation } from '../../api/dashboard';
+import {
+  dashboardApi,
+  type DashboardKpis,
+  type OverdueAllocation,
+} from '../../api/dashboard';
 import { PageHeader, Spinner, Badge } from '../../components/ui';
 import { useToast } from '../../hooks/useToast';
 
@@ -21,7 +25,9 @@ function getGreeting(): string {
 
 function fmtDate(iso: string): string {
   return new Date(iso + 'T00:00:00').toLocaleDateString(undefined, {
-    month: 'short', day: 'numeric', year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   });
 }
 
@@ -35,19 +41,33 @@ interface KpiCardProps {
   onClick?: () => void;
 }
 
-function KpiCard({ label, value, icon, variant = 'default', onClick }: KpiCardProps) {
+function KpiCard({
+  label,
+  value,
+  icon,
+  variant = 'default',
+  onClick,
+}: KpiCardProps) {
   const borderColor =
-    variant === 'danger' ? 'rgba(239,68,68,0.25)'
-    : variant === 'warning' ? 'rgba(245,158,11,0.25)'
-    : variant === 'success' ? 'rgba(34,197,94,0.25)'
-    : variant === 'info' ? 'rgba(59,130,246,0.25)'
-    : undefined;
+    variant === 'danger'
+      ? 'rgba(239,68,68,0.25)'
+      : variant === 'warning'
+        ? 'rgba(245,158,11,0.25)'
+        : variant === 'success'
+          ? 'rgba(34,197,94,0.25)'
+          : variant === 'info'
+            ? 'rgba(59,130,246,0.25)'
+            : undefined;
   const valueColor =
-    variant === 'danger' ? 'var(--danger)'
-    : variant === 'warning' ? 'var(--warning)'
-    : variant === 'success' ? 'var(--success, #22c55e)'
-    : variant === 'info' ? 'var(--primary)'
-    : 'var(--text-primary)';
+    variant === 'danger'
+      ? 'var(--danger)'
+      : variant === 'warning'
+        ? 'var(--warning)'
+        : variant === 'success'
+          ? 'var(--success, #22c55e)'
+          : variant === 'info'
+            ? 'var(--primary)'
+            : 'var(--text-primary)';
 
   return (
     <div
@@ -56,9 +76,13 @@ function KpiCard({ label, value, icon, variant = 'default', onClick }: KpiCardPr
       onClick={onClick}
       role={onClick ? 'button' : undefined}
     >
-      <div className="kpi-icon" aria-hidden="true">{icon}</div>
+      <div className="kpi-icon" aria-hidden="true">
+        {icon}
+      </div>
       <p className="kpi-label">{label}</p>
-      <p className="kpi-value" style={{ color: valueColor }}>{value}</p>
+      <p className="kpi-value" style={{ color: valueColor }}>
+        {value}
+      </p>
     </div>
   );
 }
@@ -91,7 +115,9 @@ export function DashboardPage() {
     }
   }, [toast]);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const greeting = `${getGreeting()}, ${user?.name?.split(' ')[0] ?? 'there'}`;
 
@@ -101,14 +127,24 @@ export function DashboardPage() {
         title={greeting}
         subtitle={`${ROLE_LABEL[user?.role ?? 'employee']} · AssetFlow`}
         actions={
-          <button className="btn btn--ghost btn--sm" onClick={loadData} title="Refresh">
+          <button
+            className="btn btn--ghost btn--sm"
+            onClick={loadData}
+            title="Refresh"
+          >
             ↻ Refresh
           </button>
         }
       />
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--sp-12)' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: 'var(--sp-12)',
+          }}
+        >
           <Spinner size="lg" label="Loading dashboard…" />
         </div>
       ) : (
@@ -147,14 +183,18 @@ export function DashboardPage() {
                 label="Pending Transfers"
                 value={kpis?.pending_transfers ?? 0}
                 icon="🔄"
-                variant={kpis && kpis.pending_transfers > 0 ? 'warning' : 'default'}
+                variant={
+                  kpis && kpis.pending_transfers > 0 ? 'warning' : 'default'
+                }
                 onClick={() => navigate('/allocations')}
               />
               <KpiCard
                 label="Overdue Returns"
                 value={kpis?.overdue_allocations ?? 0}
                 icon="⚠️"
-                variant={kpis && kpis.overdue_allocations > 0 ? 'danger' : 'default'}
+                variant={
+                  kpis && kpis.overdue_allocations > 0 ? 'danger' : 'default'
+                }
                 onClick={() => navigate('/allocations')}
               />
               {isManager && (
@@ -163,7 +203,11 @@ export function DashboardPage() {
                     label="Pending Maintenance"
                     value={kpis?.pending_maintenance ?? 0}
                     icon="🛠️"
-                    variant={kpis && kpis.pending_maintenance > 0 ? 'warning' : 'default'}
+                    variant={
+                      kpis && kpis.pending_maintenance > 0
+                        ? 'warning'
+                        : 'default'
+                    }
                     onClick={() => navigate('/maintenance')}
                   />
                   <KpiCard
@@ -178,30 +222,49 @@ export function DashboardPage() {
           </section>
 
           {/* ── Quick Actions ─────────────────────────────────────────────── */}
-          <section aria-label="Quick actions" style={{ marginTop: 'var(--sp-8)' }}>
-            <h2 style={{
-              fontSize: 'var(--text-sm)',
-              fontWeight: 'var(--fw-semibold)',
-              color: 'var(--text-muted)',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              marginBottom: 'var(--sp-4)',
-            }}>
+          <section
+            aria-label="Quick actions"
+            style={{ marginTop: 'var(--sp-8)' }}
+          >
+            <h2
+              style={{
+                fontSize: 'var(--text-sm)',
+                fontWeight: 'var(--fw-semibold)',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginBottom: 'var(--sp-4)',
+              }}
+            >
               Quick Actions
             </h2>
-            <div style={{ display: 'flex', gap: 'var(--sp-3)', flexWrap: 'wrap' }}>
+            <div
+              style={{ display: 'flex', gap: 'var(--sp-3)', flexWrap: 'wrap' }}
+            >
               {isManager && (
-                <button className="btn btn--secondary btn--md" onClick={() => navigate('/assets/new')}>
+                <button
+                  className="btn btn--secondary btn--md"
+                  onClick={() => navigate('/assets/new')}
+                >
                   ＋ Register Asset
                 </button>
               )}
-              <button className="btn btn--secondary btn--md" onClick={() => navigate('/bookings')}>
+              <button
+                className="btn btn--secondary btn--md"
+                onClick={() => navigate('/bookings')}
+              >
                 📅 Book Resource
               </button>
-              <button className="btn btn--secondary btn--md" onClick={() => navigate('/maintenance')}>
+              <button
+                className="btn btn--secondary btn--md"
+                onClick={() => navigate('/maintenance')}
+              >
                 🔧 Raise Maintenance
               </button>
-              <button className="btn btn--secondary btn--md" onClick={() => navigate('/audits')}>
+              <button
+                className="btn btn--secondary btn--md"
+                onClick={() => navigate('/audits')}
+              >
                 📋 View Audits
               </button>
             </div>
@@ -209,24 +272,44 @@ export function DashboardPage() {
 
           {/* ── Overdue + Upcoming Returns ───────────────────────────────── */}
           {(overdue.length > 0 || upcoming.length > 0) && (
-            <section style={{ marginTop: 'var(--sp-8)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-6)' }}>
+            <section
+              style={{
+                marginTop: 'var(--sp-8)',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 'var(--sp-6)',
+              }}
+            >
               {overdue.length > 0 && (
                 <div className="card">
-                  <h3 style={{
-                    fontSize: 'var(--text-sm)',
-                    fontWeight: 'var(--fw-semibold)',
-                    color: 'var(--danger)',
-                    marginBottom: 'var(--sp-3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--sp-2)',
-                  }}>
+                  <h3
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      fontWeight: 'var(--fw-semibold)',
+                      color: 'var(--danger)',
+                      marginBottom: 'var(--sp-3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--sp-2)',
+                    }}
+                  >
                     ⚠️ Overdue Returns
                     <Badge variant="danger">{overdue.length}</Badge>
                   </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
-                    {overdue.map(a => (
-                      <ReturnRow key={a.id} alloc={a} variant="danger" onClick={() => navigate(`/assets/${a.asset_id}`)} />
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 'var(--sp-2)',
+                    }}
+                  >
+                    {overdue.map((a) => (
+                      <ReturnRow
+                        key={a.id}
+                        alloc={a}
+                        variant="danger"
+                        onClick={() => navigate(`/assets/${a.asset_id}`)}
+                      />
                     ))}
                   </div>
                 </div>
@@ -234,21 +317,34 @@ export function DashboardPage() {
 
               {upcoming.length > 0 && (
                 <div className="card">
-                  <h3 style={{
-                    fontSize: 'var(--text-sm)',
-                    fontWeight: 'var(--fw-semibold)',
-                    color: 'var(--warning)',
-                    marginBottom: 'var(--sp-3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--sp-2)',
-                  }}>
+                  <h3
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      fontWeight: 'var(--fw-semibold)',
+                      color: 'var(--warning)',
+                      marginBottom: 'var(--sp-3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--sp-2)',
+                    }}
+                  >
                     📅 Due Within 7 Days
                     <Badge variant="warning">{upcoming.length}</Badge>
                   </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
-                    {upcoming.map(a => (
-                      <ReturnRow key={a.id} alloc={a} variant="warning" onClick={() => navigate(`/assets/${a.asset_id}`)} />
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 'var(--sp-2)',
+                    }}
+                  >
+                    {upcoming.map((a) => (
+                      <ReturnRow
+                        key={a.id}
+                        alloc={a}
+                        variant="warning"
+                        onClick={() => navigate(`/assets/${a.asset_id}`)}
+                      />
                     ))}
                   </div>
                 </div>
@@ -279,25 +375,38 @@ function ReturnRow({
         alignItems: 'center',
         padding: 'var(--sp-2) var(--sp-3)',
         borderRadius: 'var(--radius-md)',
-        background: variant === 'danger' ? 'rgba(239,68,68,0.06)' : 'rgba(245,158,11,0.06)',
+        background:
+          variant === 'danger'
+            ? 'rgba(239,68,68,0.06)'
+            : 'rgba(245,158,11,0.06)',
         cursor: 'pointer',
         fontSize: 'var(--text-sm)',
       }}
     >
       <div>
-        <span style={{ fontWeight: 'var(--fw-medium)', color: 'var(--primary)' }}>
+        <span
+          style={{ fontWeight: 'var(--fw-medium)', color: 'var(--primary)' }}
+        >
           {alloc.asset_tag}
         </span>
-        <span style={{ color: 'var(--text-muted)', marginLeft: 'var(--sp-2)', fontSize: 'var(--text-xs)' }}>
+        <span
+          style={{
+            color: 'var(--text-muted)',
+            marginLeft: 'var(--sp-2)',
+            fontSize: 'var(--text-xs)',
+          }}
+        >
           {alloc.holder_name}
         </span>
       </div>
       {alloc.expected_return_date && (
-        <span style={{
-          fontSize: 'var(--text-xs)',
-          color: variant === 'danger' ? 'var(--danger)' : 'var(--warning)',
-          fontWeight: 'var(--fw-medium)',
-        }}>
+        <span
+          style={{
+            fontSize: 'var(--text-xs)',
+            color: variant === 'danger' ? 'var(--danger)' : 'var(--warning)',
+            fontWeight: 'var(--fw-medium)',
+          }}
+        >
           {fmtDate(alloc.expected_return_date)}
         </span>
       )}

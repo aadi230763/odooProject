@@ -33,7 +33,8 @@ export const bookingsApi = {
     date_to?: string;
   }) => {
     const qs = new URLSearchParams();
-    if (params?.resource_asset_id) qs.set('resource_asset_id', String(params.resource_asset_id));
+    if (params?.resource_asset_id)
+      qs.set('resource_asset_id', String(params.resource_asset_id));
     if (params?.status) qs.set('status', params.status);
     if (params?.booked_by) qs.set('booked_by', String(params.booked_by));
     if (params?.date_from) qs.set('date_from', params.date_from);

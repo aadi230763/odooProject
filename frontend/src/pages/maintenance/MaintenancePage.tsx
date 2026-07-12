@@ -23,7 +23,10 @@ import { useAuth } from '../../context/AuthContext';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-const PRIORITY_BADGE: Record<MaintenancePriority, 'danger' | 'warning' | 'info' | 'muted'> = {
+const PRIORITY_BADGE: Record<
+  MaintenancePriority,
+  'danger' | 'warning' | 'info' | 'muted'
+> = {
   critical: 'danger',
   high: 'warning',
   medium: 'info',
@@ -174,8 +177,8 @@ export function MaintenancePage() {
       const res = await maintenanceApi.get(id);
       setSelected(res.maintenance_request);
       // Also update in list
-      setRequests(prev =>
-        prev.map(r => (r.id === id ? res.maintenance_request : r)),
+      setRequests((prev) =>
+        prev.map((r) => (r.id === id ? res.maintenance_request : r)),
       );
     } catch {
       /* ignore */
@@ -193,7 +196,10 @@ export function MaintenancePage() {
       await refreshSelected(selected.id);
       loadRequests();
     } catch (err) {
-      toast.error('Approval failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Approval failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setActionLoading(false);
     }
@@ -208,7 +214,10 @@ export function MaintenancePage() {
       await refreshSelected(selected.id);
       loadRequests();
     } catch (err) {
-      toast.error('Rejection failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Rejection failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setActionLoading(false);
     }
@@ -241,7 +250,10 @@ export function MaintenancePage() {
       await refreshSelected(selected.id);
       loadRequests();
     } catch (err) {
-      toast.error('Assignment failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Assignment failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setAssignLoading(false);
     }
@@ -273,7 +285,10 @@ export function MaintenancePage() {
       await refreshSelected(selected.id);
       loadRequests();
     } catch (err) {
-      toast.error('Resolution failed.', err instanceof ApiError ? err.message : undefined);
+      toast.error(
+        'Resolution failed.',
+        err instanceof ApiError ? err.message : undefined,
+      );
     } finally {
       setActionLoading(false);
     }
@@ -307,7 +322,7 @@ export function MaintenancePage() {
             id="status-filter"
             label="Filter by Status"
             value={statusFilter}
-            onChange={e => setStatusFilter(e.target.value)}
+            onChange={(e) => setStatusFilter(e.target.value)}
             options={[
               { value: '', label: 'All Statuses' },
               { value: 'pending', label: 'Pending' },
@@ -324,7 +339,7 @@ export function MaintenancePage() {
             id="priority-filter"
             label="Filter by Priority"
             value={priorityFilter}
-            onChange={e => setPriorityFilter(e.target.value)}
+            onChange={(e) => setPriorityFilter(e.target.value)}
             options={[
               { value: '', label: 'All Priorities' },
               { value: 'critical', label: 'Critical' },
@@ -354,14 +369,14 @@ export function MaintenancePage() {
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         <Table
           loading={loading}
-          keyExtractor={r => String(r.id)}
+          keyExtractor={(r) => String(r.id)}
           data={requests}
           empty="No maintenance requests found."
           columns={[
             {
               key: 'asset',
               header: 'Asset',
-              render: r => (
+              render: (r) => (
                 <div>
                   <strong
                     style={{ color: 'var(--primary)', cursor: 'pointer' }}
@@ -370,7 +385,10 @@ export function MaintenancePage() {
                     {r.asset_tag}
                   </strong>
                   <div
-                    style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}
+                    style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-muted)',
+                    }}
                   >
                     {r.asset_name}
                   </div>
@@ -380,11 +398,14 @@ export function MaintenancePage() {
             {
               key: 'raised',
               header: 'Raised By',
-              render: r => (
+              render: (r) => (
                 <div>
                   <div>{r.raised_by_name}</div>
                   <div
-                    style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}
+                    style={{
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-muted)',
+                    }}
                   >
                     {fmt(r.created_at)}
                   </div>
@@ -394,7 +415,7 @@ export function MaintenancePage() {
             {
               key: 'description',
               header: 'Issue',
-              render: r => (
+              render: (r) => (
                 <span
                   style={{
                     maxWidth: '260px',
@@ -412,16 +433,14 @@ export function MaintenancePage() {
             {
               key: 'priority',
               header: 'Priority',
-              render: r => (
-                <Badge variant={PRIORITY_BADGE[r.priority]}>
-                  {r.priority}
-                </Badge>
+              render: (r) => (
+                <Badge variant={PRIORITY_BADGE[r.priority]}>{r.priority}</Badge>
               ),
             },
             {
               key: 'status',
               header: 'Status',
-              render: r => (
+              render: (r) => (
                 <Badge variant={STATUS_BADGE[r.status]}>
                   {STATUS_LABEL[r.status]}
                 </Badge>
@@ -431,7 +450,7 @@ export function MaintenancePage() {
               key: 'actions',
               header: '',
               width: '90px',
-              render: r => (
+              render: (r) => (
                 <Button variant="ghost" size="sm" onClick={() => openDetail(r)}>
                   View
                 </Button>
@@ -451,22 +470,34 @@ export function MaintenancePage() {
             <Button variant="secondary" onClick={() => setShowRaise(false)}>
               Cancel
             </Button>
-            <Button variant="primary" loading={raiseSaving} onClick={handleRaise}>
+            <Button
+              variant="primary"
+              loading={raiseSaving}
+              onClick={handleRaise}
+            >
               Submit Request
             </Button>
           </>
         }
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--sp-4)',
+          }}
+        >
           <Select
             id="raise-asset"
             label="Asset"
             required
             value={raiseForm.asset_id}
-            onChange={e => setRaiseForm({ ...raiseForm, asset_id: e.target.value })}
+            onChange={(e) =>
+              setRaiseForm({ ...raiseForm, asset_id: e.target.value })
+            }
             options={[
               { value: '', label: 'Select an asset...' },
-              ...assets.map(a => ({
+              ...assets.map((a) => ({
                 value: String(a.id),
                 label: `${a.asset_tag} — ${a.name}`,
               })),
@@ -501,15 +532,20 @@ export function MaintenancePage() {
               }}
               placeholder="Describe the issue in detail (min. 10 characters)…"
               value={raiseForm.description}
-              onChange={e => setRaiseForm({ ...raiseForm, description: e.target.value })}
+              onChange={(e) =>
+                setRaiseForm({ ...raiseForm, description: e.target.value })
+              }
             />
           </div>
           <Select
             id="raise-priority"
             label="Priority"
             value={raiseForm.priority}
-            onChange={e =>
-              setRaiseForm({ ...raiseForm, priority: e.target.value as MaintenancePriority })
+            onChange={(e) =>
+              setRaiseForm({
+                ...raiseForm,
+                priority: e.target.value as MaintenancePriority,
+              })
             }
             options={[
               { value: 'low', label: 'Low' },
@@ -536,14 +572,29 @@ export function MaintenancePage() {
               type="file"
               accept="image/png,image/jpeg,image/jpg"
               style={{ display: 'none' }}
-              onChange={e => setRaisePhoto(e.target.files?.[0] ?? null)}
+              onChange={(e) => setRaisePhoto(e.target.files?.[0] ?? null)}
             />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-              <Button variant="secondary" size="sm" onClick={() => fileRef.current?.click()}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--sp-3)',
+              }}
+            >
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => fileRef.current?.click()}
+              >
                 {raisePhoto ? 'Change Photo' : 'Attach Photo'}
               </Button>
               {raisePhoto && (
-                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+                <span
+                  style={{
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--text-muted)',
+                  }}
+                >
                   {raisePhoto.name}
                 </span>
               )}
@@ -564,7 +615,13 @@ export function MaintenancePage() {
             </Button>
           }
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--sp-4)',
+            }}
+          >
             {/* Asset info */}
             <div
               style={{
@@ -603,7 +660,10 @@ export function MaintenancePage() {
                   </Badge>
                 }
               />
-              <InfoRow label="Raised By" value={selected.raised_by_name ?? '—'} />
+              <InfoRow
+                label="Raised By"
+                value={selected.raised_by_name ?? '—'}
+              />
               <InfoRow label="Raised At" value={fmt(selected.created_at)} />
               {selected.approver_name && (
                 <InfoRow label="Approver" value={selected.approver_name} />
@@ -664,7 +724,7 @@ export function MaintenancePage() {
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border)',
                   }}
-                  onError={e => {
+                  onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
@@ -711,10 +771,10 @@ export function MaintenancePage() {
           label="Technician"
           required
           value={techId}
-          onChange={e => setTechId(e.target.value)}
+          onChange={(e) => setTechId(e.target.value)}
           options={[
             { value: '', label: 'Select an employee...' },
-            ...employees.map(e => ({
+            ...employees.map((e) => ({
               value: String(e.id),
               label: `${e.name} (${e.role})`,
             })),
@@ -727,13 +787,7 @@ export function MaintenancePage() {
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
-function InfoRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
+function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
       <p

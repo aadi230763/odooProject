@@ -23,6 +23,7 @@ logs_bp = Blueprint("logs", __name__)
 
 # ── Dashboard KPIs ─────────────────────────────────────────────────────────────
 
+
 @dashboard_bp.get("/kpis")
 @require_role()
 def get_kpis():
@@ -30,6 +31,7 @@ def get_kpis():
 
 
 # ── Notifications ──────────────────────────────────────────────────────────────
+
 
 @notifications_bp.get("")
 @require_role()
@@ -56,6 +58,7 @@ def unread_count():
 
 
 # ── Activity Logs ──────────────────────────────────────────────────────────────
+
 
 @logs_bp.get("")
 @require_role(EmployeeRole.admin, EmployeeRole.asset_manager)

@@ -53,12 +53,12 @@ def get_dashboard_kpis() -> dict[str, Any]:
     # Upcoming allocations with expected_return_date in the next 7 days
     from datetime import timedelta
     from sqlalchemy import and_
+
     upcoming_returns = Allocation.query.filter(
         and_(
             Allocation.status == AllocationStatus.active,
             Allocation.expected_return_date.isnot(None),
-            Allocation.expected_return_date
-            <= (now + timedelta(days=7)).date(),
+            Allocation.expected_return_date <= (now + timedelta(days=7)).date(),
         )
     ).count()
 
@@ -89,14 +89,14 @@ def get_overdue_allocations(limit: int = 10) -> list[dict[str, Any]]:
 def get_upcoming_returns(limit: int = 10) -> list[dict[str, Any]]:
     from datetime import timedelta
     from sqlalchemy import and_
+
     now = datetime.now(timezone.utc)
     rows = (
         Allocation.query.filter(
             and_(
                 Allocation.status == AllocationStatus.active,
                 Allocation.expected_return_date.isnot(None),
-                Allocation.expected_return_date
-                <= (now + timedelta(days=7)).date(),
+                Allocation.expected_return_date <= (now + timedelta(days=7)).date(),
             )
         )
         .order_by(Allocation.expected_return_date.asc())
@@ -196,12 +196,7 @@ def list_activity_logs(
         q = q.filter(ActivityLog.action.ilike(f"%{action}%"))
 
     total = q.count()
-    rows = (
-        q.order_by(ActivityLog.created_at.desc())
-        .limit(limit)
-        .offset(offset)
-        .all()
-    )
+    rows = q.order_by(ActivityLog.created_at.desc()).limit(limit).offset(offset).all()
     return rows, total
 
 

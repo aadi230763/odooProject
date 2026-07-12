@@ -16,7 +16,11 @@ def get_kpis():
     overdue = dashboard_service.get_overdue_allocations()
     upcoming = dashboard_service.get_upcoming_returns()
     return success_response(
-        data={"kpis": kpis, "overdue_allocations": overdue, "upcoming_returns": upcoming}
+        data={
+            "kpis": kpis,
+            "overdue_allocations": overdue,
+            "upcoming_returns": upcoming,
+        }
     )
 
 

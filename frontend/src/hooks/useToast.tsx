@@ -123,10 +123,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const value: ToastContextValue = useMemo(
     () => ({
       toast: push,
-      success: (title: string, message?: string) => push({ variant: 'success', title, message }),
-      error: (title: string, message?: string) => push({ variant: 'error', title, message }),
-      warning: (title: string, message?: string) => push({ variant: 'warning', title, message }),
-      info: (title: string, message?: string) => push({ variant: 'info', title, message }),
+      success: (title: string, message?: string) =>
+        push({ variant: 'success', title, message }),
+      error: (title: string, message?: string) =>
+        push({ variant: 'error', title, message }),
+      warning: (title: string, message?: string) =>
+        push({ variant: 'warning', title, message }),
+      info: (title: string, message?: string) =>
+        push({ variant: 'info', title, message }),
     }),
     [push],
   );
