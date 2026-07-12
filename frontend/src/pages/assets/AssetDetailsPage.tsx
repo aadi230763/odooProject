@@ -6,6 +6,7 @@ import {
   type AssetStatus,
   type AssetDocument,
 } from '../../api/assets';
+import { maintenanceApi, type MaintenanceRequest, type MaintenanceStatus } from '../../api/maintenance';
 import { ApiError } from '../../api/client';
 import { Badge, Button, Select, Spinner, Modal } from '../../components/ui';
 import { useToast } from '../../hooks/useToast';
@@ -45,6 +46,8 @@ export function AssetDetailsPage() {
   const [documents, setDocuments] = useState<AssetDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [maintenanceHistory, setMaintenanceHistory] = useState<MaintenanceRequest[]>([]);
+
   const [statusModal, setStatusModal] = useState(false);
   const [newStatus, setNewStatus] = useState<AssetStatus>('available');
   const [savingStatus, setSavingStatus] = useState(false);
@@ -55,12 +58,14 @@ export function AssetDetailsPage() {
     if (!id) return;
     setLoading(true);
     try {
-      const [assRes, docRes] = await Promise.all([
+      const [assRes, docRes, maintRes] = await Promise.all([
         assetsApi.get(Number(id)),
         assetsApi.getDocuments(Number(id)),
+        maintenanceApi.list({ asset_id: Number(id) }),
       ]);
       setAsset(assRes.asset);
       setDocuments(docRes.documents);
+      setMaintenanceHistory(maintRes.maintenance_requests);
     } catch {
       toast.error('Failed to load asset details.');
       navigate('/assets');
@@ -329,6 +334,50 @@ export function AssetDetailsPage() {
               </div>
             )}
           </div>
+
+          {/* Maintenance History */}
+          <div className="card">
+            <h3
+              style={{
+                fontSize: 'var(--text-lg)',
+                fontWeight: 'var(--fw-bold)',
+                marginBottom: 'var(--sp-4)',
+              }}
+            >
+              Maintenance History
+            </h3>
+            {maintenanceHistory.length === 0 ? (
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
+                No maintenance records.
+              </p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
+                {maintenanceHistory.map(m => (
+                  <div
+                    key={m.id}
+                    style={{
+                      padding: 'var(--sp-3)',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'var(--bg-surface-2)',
+                      fontSize: 'var(--text-sm)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--sp-1)' }}>
+                      <span style={{ fontWeight: 'var(--fw-medium)' }}>
+                        {m.description.length > 80 ? m.description.slice(0, 80) + '…' : m.description}
+                      </span>
+                      <MaintenanceStatusBadge status={m.status} />
+                    </div>
+                    <div style={{ display: 'flex', gap: 'var(--sp-4)', color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>
+                      <span>Priority: <strong>{m.priority}</strong></span>
+                      <span>Raised by: {m.raised_by_name}</span>
+                      <span>{new Date(m.created_at).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div
@@ -409,4 +458,24 @@ export function AssetDetailsPage() {
       </Modal>
     </>
   );
+}
+
+function MaintenanceStatusBadge({ status }: { status: MaintenanceStatus }) {
+  const variantMap: Record<MaintenanceStatus, 'muted' | 'primary' | 'danger' | 'warning' | 'info' | 'success'> = {
+    pending: 'warning',
+    approved: 'info',
+    rejected: 'danger',
+    technician_assigned: 'primary',
+    in_progress: 'primary',
+    resolved: 'success',
+  };
+  const labelMap: Record<MaintenanceStatus, string> = {
+    pending: 'Pending',
+    approved: 'Approved',
+    rejected: 'Rejected',
+    technician_assigned: 'Tech Assigned',
+    in_progress: 'In Progress',
+    resolved: 'Resolved',
+  };
+  return <Badge variant={variantMap[status]}>{labelMap[status]}</Badge>;
 }

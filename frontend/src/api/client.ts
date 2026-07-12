@@ -104,11 +104,55 @@ async function request<T>(
   return envelope.data as T;
 }
 
+async function requestForm<T>(
+  method: string,
+  path: string,
+  body: FormData,
+): Promise<T> {
+  // No Content-Type header — browser sets it automatically for multipart
+  const headers: Record<string, string> = {};
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(`/api${path}`, { method, headers, body });
+  } catch {
+    throw new ApiError('Network error — backend unreachable.', 'NETWORK_ERROR', 0);
+  }
+
+  let envelope: ApiEnvelope<T>;
+  try {
+    envelope = (await response.json()) as ApiEnvelope<T>;
+  } catch {
+    throw new ApiError(
+      `Unexpected response from server (${response.status}).`,
+      'PARSE_ERROR',
+      response.status,
+    );
+  }
+
+  if (!envelope.success) {
+    const err = envelope.error;
+    throw new ApiError(
+      err?.message ?? envelope.message ?? 'An unknown error occurred.',
+      err?.code ?? 'UNKNOWN_ERROR',
+      response.status,
+      err?.fields,
+    );
+  }
+
+  return envelope.data as T;
+}
+
 // ── Convenience wrappers ───────────────────────────────────────────────────────
 
 export const api = {
   get: <T>(path: string) => request<T>('GET', path),
   post: <T>(path: string, body?: unknown) => request<T>('POST', path, body),
+  postForm: <T>(path: string, body: FormData) => requestForm<T>('POST', path, body),
   put: <T>(path: string, body?: unknown) => request<T>('PUT', path, body),
   patch: <T>(path: string, body?: unknown) => request<T>('PATCH', path, body),
   delete: <T>(path: string, body?: unknown) => request<T>('DELETE', path, body),

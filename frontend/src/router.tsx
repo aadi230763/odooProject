@@ -26,6 +26,7 @@ import { AssetRegistrationPage } from './pages/assets/AssetRegistrationPage';
 import { AssetDetailsPage } from './pages/assets/AssetDetailsPage';
 import { AllocationsPage } from './pages/allocations/AllocationsPage';
 import { BookingsPage } from './pages/bookings/BookingsPage';
+import { MaintenancePage } from './pages/maintenance/MaintenancePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 // ── Placeholder for future-phase pages ────────────────────────────────────────
@@ -145,7 +146,7 @@ export function AppRouter() {
             {/* Maintenance (Phase 8) */}
             <Route
               path="maintenance"
-              element={<ComingSoon name="Maintenance" />}
+              element={<MaintenancePage />}
             />
 
             {/* Audits (Phase 9) */}
