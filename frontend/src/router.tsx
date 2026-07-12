@@ -24,6 +24,7 @@ import { OrgSetupPage } from './pages/org/OrgSetupPage';
 import { AssetDirectoryPage } from './pages/assets/AssetDirectoryPage';
 import { AssetRegistrationPage } from './pages/assets/AssetRegistrationPage';
 import { AssetDetailsPage } from './pages/assets/AssetDetailsPage';
+import { AllocationsPage } from './pages/allocations/AllocationsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 // ── Placeholder for future-phase pages ────────────────────────────────────────
@@ -114,7 +115,7 @@ export function AppRouter() {
             <Route path="assets/:id" element={<AssetDetailsPage />} />
 
             {/* Allocation (Phase 6) */}
-            <Route path="allocations" element={<ComingSoon name="Allocations" />} />
+            <Route path="allocations" element={<AllocationsPage />} />
 
             {/* Booking (Phase 7) */}
             <Route path="bookings" element={<ComingSoon name="Resource Booking" />} />
