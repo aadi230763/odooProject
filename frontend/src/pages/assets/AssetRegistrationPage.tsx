@@ -47,22 +47,23 @@ export function AssetRegistrationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.category_id) {
-      toast.error('Name and Category are required.');
+    const trimmedName = form.name.trim();
+    if (trimmedName.length < 2 || !form.category_id) {
+      toast.error('Name (min 2 chars) and Category are required.');
       return;
     }
     
     setSaving(true);
     try {
       const payload = {
-        name: form.name,
+        name: trimmedName,
         category_id: Number(form.category_id),
-        serial_number: form.serial_number || null,
-        acquisition_date: form.acquisition_date || null,
-        acquisition_cost: form.acquisition_cost || null,
+        serial_number: form.serial_number.trim() || null,
+        acquisition_date: form.acquisition_date.trim() || null,
+        acquisition_cost: form.acquisition_cost.trim() ? Number(form.acquisition_cost.trim()) : null,
         condition: form.condition,
-        location: form.location || null,
-        is_bookable: form.is_bookable,
+        location: form.location.trim() || null,
+        is_bookable: Boolean(form.is_bookable),
       };
 
       const res = await assetsApi.create(payload);
