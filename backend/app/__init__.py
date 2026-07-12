@@ -81,9 +81,11 @@ def _register_blueprints(flask_app: Flask) -> None:
     from app.routes.org import org_bp
     from app.routes.asset import asset_bp
     from app.routes.allocation import allocation_bp
+    from app.routes.booking import booking_bp
 
     flask_app.register_blueprint(health_bp, url_prefix="/api")
     flask_app.register_blueprint(auth_bp, url_prefix="/api/auth")
     flask_app.register_blueprint(org_bp, url_prefix="/api/org")
     flask_app.register_blueprint(asset_bp, url_prefix="/api/assets")
     flask_app.register_blueprint(allocation_bp, url_prefix="/api")
+    flask_app.register_blueprint(booking_bp, url_prefix="/api/bookings")
