@@ -36,8 +36,9 @@ def _init_extensions(app: Flask) -> None:
     cors.init_app(app, resources={r"/api/*": {"origins": app.config["CORS_ORIGINS"]}})
 
 
-def _register_blueprints(app: Flask) -> None:
+def _register_blueprints(flask_app: Flask) -> None:
     """Register all route blueprints. New modules are wired up here."""
+    from app import models  # noqa: F401 — populate db.metadata for Flask-Migrate
     from app.routes.health import health_bp
 
-    app.register_blueprint(health_bp, url_prefix="/api")
+    flask_app.register_blueprint(health_bp, url_prefix="/api")
