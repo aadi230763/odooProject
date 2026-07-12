@@ -5,6 +5,7 @@ import { ApiError } from '../../api/client';
 import { Badge, Button, Select, Spinner, Modal } from '../../components/ui';
 import { useToast } from '../../hooks/useToast';
 import { useAuth } from '../../context/AuthContext';
+import { getBackendImageUrl } from '../../utils/url';
 
 const STATUS_BADGE: Record<AssetStatus, 'success' | 'primary' | 'warning' | 'danger' | 'info' | 'muted'> = {
   available: 'success',
@@ -159,7 +160,7 @@ export function AssetDetailsPage() {
                 {photos.map(p => (
                   <img
                     key={p.id}
-                    src={`/static/${p.file_path}`}
+                    src={getBackendImageUrl(p.file_path)}
                     alt="Asset"
                     style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
                   />
@@ -173,7 +174,7 @@ export function AssetDetailsPage() {
           <div className="card" style={{ textAlign: 'center' }}>
             <h3 style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', marginBottom: 'var(--sp-4)' }}>QR Code</h3>
             {asset.qr_code_path ? (
-              <img src={`/static/${asset.qr_code_path}`} alt="QR Code" style={{ width: '100%', maxWidth: '200px', margin: '0 auto' }} />
+              <img src={getBackendImageUrl(asset.qr_code_path)} alt="QR Code" style={{ width: '100%', maxWidth: '200px', margin: '0 auto' }} />
             ) : (
               <p style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>No QR code available.</p>
             )}
