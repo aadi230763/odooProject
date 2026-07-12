@@ -21,6 +21,9 @@ import { SignupPage } from './pages/auth/SignupPage';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 import { OrgSetupPage } from './pages/org/OrgSetupPage';
+import { AssetDirectoryPage } from './pages/assets/AssetDirectoryPage';
+import { AssetRegistrationPage } from './pages/assets/AssetRegistrationPage';
+import { AssetDetailsPage } from './pages/assets/AssetDetailsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 // ── Placeholder for future-phase pages ────────────────────────────────────────
@@ -104,8 +107,11 @@ export function AppRouter() {
             <Route path="dashboard" element={<DashboardPage />} />
 
             {/* Asset modules (Phase 5+) */}
-            <Route path="assets" element={<ComingSoon name="Asset Directory" />} />
-            <Route path="assets/:id" element={<ComingSoon name="Asset Detail" />} />
+            <Route path="assets" element={<AssetDirectoryPage />} />
+            <Route element={<RequireRole roles={['admin', 'asset_manager']} />}>
+              <Route path="assets/new" element={<AssetRegistrationPage />} />
+            </Route>
+            <Route path="assets/:id" element={<AssetDetailsPage />} />
 
             {/* Allocation (Phase 6) */}
             <Route path="allocations" element={<ComingSoon name="Allocations" />} />

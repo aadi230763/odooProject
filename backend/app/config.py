@@ -29,6 +29,12 @@ class BaseConfig:
     # Comma-separated list of allowed frontend origins.
     CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
 
+    # File uploads
+    UPLOAD_FOLDER = os.getenv(
+        "UPLOAD_FOLDER", os.path.join(os.path.dirname(__file__), "static", "uploads")
+    )
+    MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10 MB limit
+
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
