@@ -1,35 +1,32 @@
-import { useEffect, useState } from 'react';
-
 /**
- * Phase 0 "hello world" screen.
+ * App root
  *
- * Proves the React app boots and can reach the Flask backend's health
- * endpoint through the Vite dev proxy. Replaced by the real app shell and
- * design system in Phase 3.
+ * Wraps the entire application in:
+ *  - BrowserRouter       — HTML5 history-based routing
+ *  - AuthProvider        — JWT session state + helpers
+ *  - ToastProvider       — global toast/notification system
+ *  - ErrorBoundary       — catch unexpected runtime errors, never blank screen
+ *
+ * The actual page routing lives in <AppRouter>.
  */
+
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { ToastProvider } from './hooks/useToast';
+import { ErrorBoundary } from './components/ui';
+import { AppRouter } from './router';
+
 function App() {
-  const [status, setStatus] = useState<'checking' | 'ok' | 'down'>('checking');
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((res) => res.json())
-      .then((body) => setStatus(body?.data?.status === 'ok' ? 'ok' : 'down'))
-      .catch(() => setStatus('down'));
-  }, []);
-
   return (
-    <main className="app-shell">
-      <h1>AssetFlow</h1>
-      <p>Enterprise Asset &amp; Resource Management System</p>
-      <p className={`backend-status backend-status--${status}`}>
-        Backend:{' '}
-        {status === 'checking'
-          ? 'checking…'
-          : status === 'ok'
-            ? 'connected ✓'
-            : 'unreachable ✗'}
-      </p>
-    </main>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <ToastProvider>
+            <AppRouter />
+          </ToastProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
