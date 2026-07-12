@@ -19,7 +19,6 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 from flask import current_app
-from marshmallow import ValidationError
 
 from app.extensions import bcrypt, db
 from app.models.employee import Employee, EmployeeRole, EmployeeStatus
@@ -55,7 +54,7 @@ def signup(data: dict) -> tuple[Employee, str]:
         password_hash=bcrypt.generate_password_hash(validated["password"]).decode(
             "utf-8"
         ),
-        role=EmployeeRole.employee,      # signup NEVER elevates role
+        role=EmployeeRole.employee,  # signup NEVER elevates role
         status=EmployeeStatus.active,
         department_id=validated.get("department_id"),
     )
@@ -140,7 +139,7 @@ def _generate_token(emp: Employee) -> str:
     cfg = current_app.config
     now = datetime.now(timezone.utc)
     payload = {
-        "sub": str(emp.id),   # PyJWT 2.x requires sub to be a string
+        "sub": str(emp.id),  # PyJWT 2.x requires sub to be a string
         "email": emp.email,
         "role": emp.role.value,
         "iat": now,

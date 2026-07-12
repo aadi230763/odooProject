@@ -31,13 +31,13 @@ def login():
 
 
 @auth_bp.post("/logout")
-@require_role()          # any authenticated active employee
+@require_role()  # any authenticated active employee
 def logout():
     return auth_controller.logout()
 
 
 @auth_bp.get("/me")
-@require_role()          # proves RBAC works; used as the "protected sample endpoint"
+@require_role()  # proves RBAC works; used as the "protected sample endpoint"
 def me():
     return auth_controller.me()
 
