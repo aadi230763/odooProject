@@ -1,0 +1,49 @@
+name: CI
+
+# Minimal lint/format check. Runs on every PR into develop/main and on pushes
+# to those branches. Fails on any lint or formatting violation.
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+jobs:
+  backend-lint:
+    name: Backend · black + flake8
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install lint tools
+        run: pip install black==24.4.2 flake8==7.1.0
+      - name: black (check)
+        run: black --check .
+      - name: flake8
+        run: flake8 .
+
+  frontend-lint:
+    name: Frontend · ESLint + Prettier
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: ESLint
+        run: npm run lint
+      - name: Prettier (check)
+        run: npm run format:check

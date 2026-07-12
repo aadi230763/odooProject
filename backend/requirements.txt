@@ -1,0 +1,31 @@
+# --- Core web framework ---
+Flask==3.0.3
+Werkzeug==3.0.3
+
+# --- Database & migrations ---
+SQLAlchemy==2.0.31
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.7
+alembic==1.13.2
+psycopg2-binary==2.9.9
+
+# --- Auth & security ---
+Flask-Bcrypt==1.0.1
+PyJWT==2.8.0
+
+# --- Validation ---
+marshmallow==3.21.3
+
+# --- Config ---
+python-dotenv==1.0.1
+
+# --- CORS (frontend <-> backend during dev) ---
+Flask-Cors==4.0.1
+
+# --- Utilities ---
+qrcode[pil]==7.4.2
+
+# --- Dev / tooling ---
+black==24.4.2
+flake8==7.1.0
+pytest==8.2.2

@@ -1,0 +1,26 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  place-items: center;
+  justify-content: center;
+}
+
+.app-shell {
+  text-align: center;
+  padding: 2rem;
+}
+
+.backend-status--ok {
+  color: #16a34a;
+}
+
+.backend-status--down {
+  color: #dc2626;
+}

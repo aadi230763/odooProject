@@ -1,0 +1,36 @@
+# ---------- Python / backend ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+instance/
+
+# ---------- Node / frontend ----------
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+*.tsbuildinfo
+# Emitted by `tsc -b` for the composite vite config — not source.
+frontend/vite.config.js
+frontend/vite.config.d.ts
+
+# ---------- Environment & secrets ----------
+.env
+.env.*
+!.env.example
+
+# ---------- Uploads / generated files ----------
+backend/uploads/
+*.log
+
+# ---------- Editor / OS ----------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
