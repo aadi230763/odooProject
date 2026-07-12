@@ -20,6 +20,7 @@ import { LoginPage } from './pages/auth/LoginPage';
 import { SignupPage } from './pages/auth/SignupPage';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
+import { OrgSetupPage } from './pages/org/OrgSetupPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 // ── Placeholder for future-phase pages ────────────────────────────────────────
@@ -120,7 +121,7 @@ export function AppRouter() {
 
             {/* Admin-only routes */}
             <Route element={<RequireRole roles={['admin']} />}>
-              <Route path="org" element={<ComingSoon name="Organization Setup" />} />
+              <Route path="org" element={<OrgSetupPage />} />
             </Route>
 
             {/* Admin + Asset Manager */}
