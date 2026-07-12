@@ -27,35 +27,10 @@ import { AssetDetailsPage } from './pages/assets/AssetDetailsPage';
 import { AllocationsPage } from './pages/allocations/AllocationsPage';
 import { BookingsPage } from './pages/bookings/BookingsPage';
 import { MaintenancePage } from './pages/maintenance/MaintenancePage';
+import { AuditCyclesPage } from './pages/audits/AuditCyclesPage';
+import { NotificationsPage } from './pages/notifications/NotificationsPage';
+import { ActivityLogsPage } from './pages/logs/ActivityLogsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
-
-// ── Placeholder for future-phase pages ────────────────────────────────────────
-
-function ComingSoon({ name }: { name: string }) {
-  return (
-    <div
-      style={{
-        padding: 'var(--sp-8)',
-        textAlign: 'center',
-        color: 'var(--text-muted)',
-      }}
-    >
-      <div style={{ fontSize: '3rem', marginBottom: 'var(--sp-4)' }}>🚧</div>
-      <h2
-        style={{
-          fontSize: 'var(--text-xl)',
-          color: 'var(--text-primary)',
-          marginBottom: 'var(--sp-2)',
-        }}
-      >
-        {name}
-      </h2>
-      <p style={{ fontSize: 'var(--text-sm)' }}>
-        This module is coming in a future phase.
-      </p>
-    </div>
-  );
-}
 
 // ── Guards ────────────────────────────────────────────────────────────────────
 
@@ -150,7 +125,7 @@ export function AppRouter() {
             />
 
             {/* Audits (Phase 9) */}
-            <Route path="audits" element={<ComingSoon name="Audit Cycles" />} />
+            <Route path="audits" element={<AuditCyclesPage />} />
 
             {/* Admin-only routes */}
             <Route element={<RequireRole roles={['admin']} />}>
@@ -159,17 +134,11 @@ export function AppRouter() {
 
             {/* Admin + Asset Manager */}
             <Route element={<RequireRole roles={['admin', 'asset_manager']} />}>
-              <Route
-                path="logs"
-                element={<ComingSoon name="Activity Logs" />}
-              />
+              <Route path="logs" element={<ActivityLogsPage />} />
             </Route>
 
             {/* Notifications (Phase 10) */}
-            <Route
-              path="notifications"
-              element={<ComingSoon name="Notifications" />}
-            />
+            <Route path="notifications" element={<NotificationsPage />} />
           </Route>
         </Route>
 

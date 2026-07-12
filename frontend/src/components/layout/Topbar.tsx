@@ -1,11 +1,10 @@
 /**
- * Topbar
- *
- * Renders the page title (derived from the current route) and action icons
- * (notifications bell, user avatar shortcut).
+ * Topbar — Phase 10 update: live unread notification badge + navigation.
  */
 
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { notificationsApi } from '../../api/dashboard';
 
 const ROUTE_TITLES: Record<string, string> = {
   '/dashboard': 'Dashboard',
@@ -21,8 +20,28 @@ const ROUTE_TITLES: Record<string, string> = {
 
 export function Topbar() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [unread, setUnread] = useState(0);
 
-  // Match by prefix so nested routes keep the right title
+  // Poll unread count every 60 s
+  useEffect(() => {
+    let mounted = true;
+    const fetch = () =>
+      notificationsApi
+        .unreadCount()
+        .then(r => { if (mounted) setUnread(r.unread_count); })
+        .catch(() => { /* silent */ });
+
+    fetch();
+    const timer = setInterval(fetch, 60_000);
+    return () => { mounted = false; clearInterval(timer); };
+  }, []);
+
+  // Reset badge when user visits the notifications page
+  useEffect(() => {
+    if (pathname === '/notifications') setUnread(0);
+  }, [pathname]);
+
   const title =
     Object.entries(ROUTE_TITLES).find(([route]) =>
       pathname.startsWith(route),
@@ -36,10 +55,35 @@ export function Topbar() {
         <button
           className="icon-btn"
           title="Notifications"
-          aria-label="View notifications"
+          aria-label={`View notifications${unread > 0 ? ` (${unread} unread)` : ''}`}
           id="btn-notifications"
+          onClick={() => navigate('/notifications')}
+          style={{ position: 'relative' }}
         >
           🔔
+          {unread > 0 && (
+            <span
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                minWidth: '16px',
+                height: '16px',
+                borderRadius: '999px',
+                background: 'var(--danger)',
+                color: '#fff',
+                fontSize: '10px',
+                fontWeight: 700,
+                lineHeight: '16px',
+                textAlign: 'center',
+                padding: '0 3px',
+                pointerEvents: 'none',
+              }}
+            >
+              {unread > 99 ? '99+' : unread}
+            </span>
+          )}
         </button>
       </div>
     </header>

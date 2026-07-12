@@ -420,9 +420,11 @@ def seed() -> None:
         db.session.flush()
 
         # -----------------------------------------------------------------
-        # Audit Cycle (closed — demonstrates discrepancy reporting)
+        # Audit Cycles
         # -----------------------------------------------------------------
-        print("→ Audit cycle…")
+        print("→ Audit cycles…")
+
+        # Cycle 1 — Closed (demonstrates discrepancy reporting)
         audit = AuditCycle(
             name="Q2 2024 IT Asset Audit",
             scope_department_id=dept_it.id,
@@ -434,14 +436,12 @@ def seed() -> None:
         db.session.add(audit)
         db.session.flush()
 
-        assign1 = AuditAssignment(
+        db.session.add(AuditAssignment(
             audit_cycle_id=audit.id,
             auditor_employee_id=dept_head.id,
-        )
-        db.session.add(assign1)
+        ))
         db.session.flush()
 
-        # Audit items with discrepancies
         audit_item1 = AuditItem(
             audit_cycle_id=audit.id,
             asset_id=laptop1.id,
@@ -460,6 +460,49 @@ def seed() -> None:
             notes="Phone not found at reported location. Employee unreachable.",
         )
         db.session.add_all([audit_item1, audit_item2, audit_item3])
+        db.session.flush()
+
+        # Cycle 2 — Open, auditors assigned, verification in progress
+        audit2 = AuditCycle(
+            name="Q3 2026 Operations Audit",
+            scope_location="Ops Floor",
+            start_date=date(2026, 7, 1),
+            end_date=date(2026, 7, 31),
+            status=AuditCycleStatus.open,
+            created_by=mgr.id,
+        )
+        db.session.add(audit2)
+        db.session.flush()
+
+        db.session.add_all([
+            AuditAssignment(audit_cycle_id=audit2.id, auditor_employee_id=emp2.id),
+            AuditAssignment(audit_cycle_id=audit2.id, auditor_employee_id=emp3.id),
+        ])
+        db.session.flush()
+
+        db.session.add_all([
+            AuditItem(audit_cycle_id=audit2.id, asset_id=laptop2.id,
+                      result=AuditItemResult.verified),
+            AuditItem(audit_cycle_id=audit2.id, asset_id=desk1.id,
+                      result=AuditItemResult.damaged,
+                      notes="Wobble in standing mechanism; needs repair."),
+            AuditItem(audit_cycle_id=audit2.id, asset_id=van1.id,
+                      result=AuditItemResult.pending),
+        ])
+        db.session.flush()
+
+        # Cycle 3 — Open, no auditors yet, all assets pending (fresh cycle)
+        audit3 = AuditCycle(
+            name="Q3 2026 Full Fleet Audit",
+            start_date=date(2026, 7, 10),
+            end_date=date(2026, 8, 10),
+            status=AuditCycleStatus.open,
+            created_by=admin.id,
+        )
+        db.session.add(audit3)
+        db.session.flush()
+
+        # No scope = no auto-items at seed time (scope filtering picks them up at runtime)
         db.session.flush()
 
         # -----------------------------------------------------------------
@@ -555,6 +598,7 @@ def seed() -> None:
         print(f"  Allocations: {Allocation.query.count()}")
         print(f"  Bookings   : {Booking.query.count()}")
         print(f"  Maintenance: {MaintenanceRequest.query.count()}")
+        print(f"  Audit cycles: {AuditCycle.query.count()}")
         print(f"  Audit items: {AuditItem.query.count()}")
 
         # -----------------------------------------------------------------

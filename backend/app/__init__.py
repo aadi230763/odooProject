@@ -83,6 +83,8 @@ def _register_blueprints(flask_app: Flask) -> None:
     from app.routes.allocation import allocation_bp
     from app.routes.booking import booking_bp
     from app.routes.maintenance import maintenance_bp
+    from app.routes.audit import audit_bp
+    from app.routes.dashboard import dashboard_bp, notifications_bp, logs_bp
 
     flask_app.register_blueprint(health_bp, url_prefix="/api")
     flask_app.register_blueprint(auth_bp, url_prefix="/api/auth")
@@ -91,3 +93,7 @@ def _register_blueprints(flask_app: Flask) -> None:
     flask_app.register_blueprint(allocation_bp, url_prefix="/api")
     flask_app.register_blueprint(booking_bp, url_prefix="/api/bookings")
     flask_app.register_blueprint(maintenance_bp, url_prefix="/api/maintenance")
+    flask_app.register_blueprint(audit_bp, url_prefix="/api/audits")
+    flask_app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
+    flask_app.register_blueprint(notifications_bp, url_prefix="/api/notifications")
+    flask_app.register_blueprint(logs_bp, url_prefix="/api/logs")

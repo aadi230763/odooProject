@@ -49,7 +49,11 @@ def list_requests():
         priority=priority,
     )
     return success_response(
-        data={"maintenance_requests": [maintenance_service.maintenance_dict(r) for r in requests]}
+        data={
+            "maintenance_requests": [
+                maintenance_service.maintenance_dict(r) for r in requests
+            ]
+        }
     )
 
 
@@ -58,7 +62,9 @@ def get_request(request_id: int):
         req = maintenance_service.get_request(request_id)
     except ValueError as exc:
         return _handle_errors(exc)
-    return success_response(data={"maintenance_request": maintenance_service.maintenance_dict(req)})
+    return success_response(
+        data={"maintenance_request": maintenance_service.maintenance_dict(req)}
+    )
 
 
 # ── Raise ──────────────────────────────────────────────────────────────────────
@@ -81,7 +87,9 @@ def raise_request():
             pass
 
     try:
-        req = maintenance_service.raise_request(data, actor_id=g.current_user.id, photo=photo)
+        req = maintenance_service.raise_request(
+            data, actor_id=g.current_user.id, photo=photo
+        )
     except ValidationError as exc:
         return error_response(
             "VALIDATION_ERROR",
@@ -105,10 +113,15 @@ def raise_request():
 def approve_request(request_id: int):
     data = request.get_json(silent=True) or {}
     try:
-        req = maintenance_service.approve_request(request_id, data, actor_id=g.current_user.id)
+        req = maintenance_service.approve_request(
+            request_id, data, actor_id=g.current_user.id
+        )
     except ValidationError as exc:
         return error_response(
-            "VALIDATION_ERROR", "Invalid input.", fields=_flatten(exc.messages), status=400
+            "VALIDATION_ERROR",
+            "Invalid input.",
+            fields=_flatten(exc.messages),
+            status=400,
         )
     except ValueError as exc:
         return _handle_errors(exc)
@@ -121,10 +134,15 @@ def approve_request(request_id: int):
 def reject_request(request_id: int):
     data = request.get_json(silent=True) or {}
     try:
-        req = maintenance_service.reject_request(request_id, data, actor_id=g.current_user.id)
+        req = maintenance_service.reject_request(
+            request_id, data, actor_id=g.current_user.id
+        )
     except ValidationError as exc:
         return error_response(
-            "VALIDATION_ERROR", "Invalid input.", fields=_flatten(exc.messages), status=400
+            "VALIDATION_ERROR",
+            "Invalid input.",
+            fields=_flatten(exc.messages),
+            status=400,
         )
     except ValueError as exc:
         return _handle_errors(exc)
@@ -137,10 +155,15 @@ def reject_request(request_id: int):
 def assign_technician(request_id: int):
     data = request.get_json(silent=True) or {}
     try:
-        req = maintenance_service.assign_technician(request_id, data, actor_id=g.current_user.id)
+        req = maintenance_service.assign_technician(
+            request_id, data, actor_id=g.current_user.id
+        )
     except ValidationError as exc:
         return error_response(
-            "VALIDATION_ERROR", "Invalid input.", fields=_flatten(exc.messages), status=400
+            "VALIDATION_ERROR",
+            "Invalid input.",
+            fields=_flatten(exc.messages),
+            status=400,
         )
     except ValueError as exc:
         return _handle_errors(exc)
@@ -164,10 +187,15 @@ def start_progress(request_id: int):
 def resolve_request(request_id: int):
     data = request.get_json(silent=True) or {}
     try:
-        req = maintenance_service.resolve_request(request_id, data, actor_id=g.current_user.id)
+        req = maintenance_service.resolve_request(
+            request_id, data, actor_id=g.current_user.id
+        )
     except ValidationError as exc:
         return error_response(
-            "VALIDATION_ERROR", "Invalid input.", fields=_flatten(exc.messages), status=400
+            "VALIDATION_ERROR",
+            "Invalid input.",
+            fields=_flatten(exc.messages),
+            status=400,
         )
     except ValueError as exc:
         return _handle_errors(exc)

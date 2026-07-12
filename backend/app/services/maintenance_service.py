@@ -106,6 +106,7 @@ def list_requests(
             pass
     if priority:
         from app.models.maintenance_request import MaintenancePriority
+
         try:
             q = q.filter(MaintenanceRequest.priority == MaintenancePriority(priority))
         except ValueError:
@@ -185,7 +186,11 @@ def approve_request(
         )
 
     asset = req.asset
-    if asset.status not in (AssetStatus.available, AssetStatus.allocated, AssetStatus.reserved):
+    if asset.status not in (
+        AssetStatus.available,
+        AssetStatus.allocated,
+        AssetStatus.reserved,
+    ):
         raise ValueError(
             f"INVALID_ASSET_STATUS: Asset is currently {asset.status.value}; "
             "cannot move it to Under Maintenance."
@@ -223,9 +228,7 @@ def reject_request(
 
     req = get_request(request_id)
     if req.status != MaintenanceStatus.pending:
-        raise ValueError(
-            f"INVALID_STATUS: Cannot reject a {req.status.value} request."
-        )
+        raise ValueError(f"INVALID_STATUS: Cannot reject a {req.status.value} request.")
 
     req.status = MaintenanceStatus.rejected
     req.approver_id = actor_id
